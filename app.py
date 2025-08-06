@@ -31,15 +31,13 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_recycle": 300,
     "pool_pre_ping": True,
 }
-
 # Initialize database
 db = SQLAlchemy(app)
 
-# Import models after db is initialized
-from models import User, Conversation
-
-# Create database tables
+# Create database tables and models first
 with app.app_context():
+    import models
+    User, Conversation = models.create_models(db)
     db.create_all()
     logging.info("Database tables created successfully")
     
