@@ -4,7 +4,7 @@ import logging
 import asyncio
 from datetime import datetime
 from openai import OpenAI
-from google import genai
+import google.generativeai as genai
 from google.genai import types
 from firebase_service import FirebaseService
 from drop_of_hope import DropOfHope
@@ -33,7 +33,7 @@ class GabeAI:
         gemini_key = os.environ.get("GEMINI_API_KEY")
         if gemini_key:
             try:
-                self.gemini_client = genai.Client(api_key=gemini_key)
+              genai.configure(api_key=gemini_key)
                 # Note that the newest Gemini model series is "gemini-2.5-flash" or "gemini-2.5-pro"
                 self.gemini_model = "gemini-2.5-flash"
             except Exception as e:
