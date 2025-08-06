@@ -33,15 +33,16 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
 }
 
 # Initialize database
-db = SQLAlchemy(app, model_class=Base)
+db = SQLAlchemy(app)
 
-# Create database tables and models first
+# Import models after db is initialized
+from models import User, Conversation
+
+# Create database tables
 with app.app_context():
-    import models
-    User, Conversation = models.create_models(db)
     db.create_all()
     logging.info("Database tables created successfully")
-
+    
 # Initialize Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
