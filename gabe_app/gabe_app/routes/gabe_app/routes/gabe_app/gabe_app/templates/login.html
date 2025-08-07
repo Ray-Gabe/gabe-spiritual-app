@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GABE Login</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="login-container">
+    <h2>🙏 Welcome Back to GABE</h2>
+    <form method="POST">
+      <label class="form-label">Username</label>
+      <input type="text" name="username" class="form-control" required>
+
+      <label class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" required>
+
+      <button type="submit" class="btn-primary">Login</button>
+    </form>
+    <div class="text-center mt-3">
+      <a href="/register">New here? Create an account</a>
+    </div>
+    <div class="text-center mt-2">
+      <a href="/">← Back to Home</a>
+    </div>
+  </div>
+</body>
+</html>
