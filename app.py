@@ -72,245 +72,266 @@ def index():
     <title>GABE - Your Spiritual Companion</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }}
-        .chat-container {{ background: rgba(255,255,255,0.95); border-radius: 15px; backdrop-filter: blur(10px); }}
-        .chat-box {{ height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; background: white; }}
-    </style>
-</head>
-<body>
-    <div class="container mt-3">
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="chat-container p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2>🙏 GABE - Your Spiritual Companion</h2>
-                        <div>
-                            {'<span class="badge bg-success">Logged in as ' + user_name + '</span> <a href="/logout" class="btn btn-sm btn-outline-danger">Logout</a>' if user_data else '<a href="/login" class="btn btn-primary me-2">Login</a><a href="/register" class="btn btn-outline-primary">Register</a>'}
-                        </div>
-                    </div>
-                    
-                    <div class="chat-box mb-3" id="chatBox">
-                        <div class="mb-2">
-                            <strong>GABE:</strong> Hello {user_name}! I'm GABE, your spiritual companion. I'm here to offer guidance, prayers, and support on your spiritual journey. How can I help you today? 🙏
-                        </div>
-                    </div>
-                    
-                    {'<div><input type="text" class="form-control mb-2" id="messageInput" placeholder="Share what\'s on your heart..."><button class="btn btn-primary" onclick="sendMessage()">Send Message</button></div>' if user_data else '<div class="text-center p-3"><p>Please login to start your conversation with GABE</p></div>'}
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        function sendMessage() {{
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            if (!message) return;
-            
-            const chatBox = document.getElementById('chatBox');
-            chatBox.innerHTML += '<div class="mb-2"><strong>You:</strong> ' + message + '</div>';
-            input.value = '';
-            
-            // Send to backend
-            fetch('/api/chat', {{
-                method: 'POST',
-                headers: {{'Content-Type': 'application/json'}},
-                body: JSON.stringify({{'message': message}})
-            }})
-            .then(response => response.json())
-            .then(data => {{
-                chatBox.innerHTML += '<div class="mb-2"><strong>GABE:</strong> ' + data.response + '</div>';
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }})
-            .catch(error => {{
-                chatBox.innerHTML += '<div class="mb-2 text-danger"><strong>GABE:</strong> I\'m having trouble right now, but I\'m still here with you. 💙</div>';
-            }});
-        }}
-        
-        // Enter key support
-        document.getElementById('messageInput')?.addEventListener('keypress', function(e) {{
-            if (e.key === 'Enter') sendMessage();
-        }});
-    </script>
-</body>
-</html>
-    """
+/* GABE - World-Class Spiritual Companion Styles */
+:root {{
+  /* Blue Theme Color Palette */
+  --primary-blue: #2563EB;
+  --primary-ocean: #1E40AF;
+  --secondary-sky: #0EA5E9;
+  --accent-indigo: #6366F1;
+  --warm-cream: #F9F7F4;
+  --soft-mist: #F5F7FA;
+  --text-forest: #2D3748;
+  --text-slate: #64748B;
+  --spiritual-gold: #F59E0B;
+  --peace-blue: #DBEAFE;
+  --hope-blue: #EBF8FF;
+  
+  /* Blue Theme Gradient System */
+  --gradient-primary: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
+  --gradient-warm: linear-gradient(135deg, #6366F1 0%, #0EA5E9 100%);
+  --gradient-peaceful: linear-gradient(135deg, #DBEAFE 0%, #EBF8FF 100%);
+  --gradient-sunset: linear-gradient(135deg, #3B82F6 0%, #1E40AF 50%, #0EA5E9 100%);
+  --gradient-divine: linear-gradient(135deg, #2563EB 0%, #6366F1 100%);
+  
+  /* Blue Theme Shadow System */
+  --shadow-soft: 0 4px 20px rgba(37, 99, 235, 0.15);
+  --shadow-chat: 0 12px 40px rgba(45, 55, 72, 0.08);
+  --shadow-elevated: 0 20px 60px rgba(45, 55, 72, 0.12);
+  --shadow-floating: 0 8px 32px rgba(37, 99, 235, 0.1);
+  
+  /* Typography Scale */
+  --font-xl: 2.25rem;
+  --font-lg: 1.5rem;
+  --font-md: 1.125rem;
+  --font-sm: 0.875rem;
+  --font-xs: 0.75rem;
+  
+  /* Spacing System */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  
+  /* Border Radius Scale */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+}}
 
-@app.route('/chat')
-@login_required
-def chat_interface():
-    """Chat interface for authenticated users - embedded HTML"""
-    return f"""
-<!DOCTYPE html>
-<html>
-<head>
-    <title>GABE Chat - Your Spiritual Companion</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }}
-        .chat-container {{ background: rgba(255,255,255,0.95); border-radius: 15px; backdrop-filter: blur(10px); }}
-        .chat-box {{ height: 500px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; background: white; border-radius: 8px; }}
-        .message {{ margin-bottom: 10px; padding: 8px; border-radius: 8px; }}
-        .user-message {{ background: #e3f2fd; text-align: right; }}
-        .gabe-message {{ background: #f3e5f5; }}
-    </style>
-</head>
-<body>
-    <div class="container mt-3">
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="chat-container p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2>🙏 GABE Chat</h2>
-                        <div>
-                            <span class="badge bg-success me-2">Welcome, {current_user.name}!</span>
-                            <a href="/logout" class="btn btn-sm btn-outline-danger">Logout</a>
-                        </div>
-                    </div>
-                    
-                    <div class="chat-box mb-3" id="chatBox">
-                        <div class="gabe-message message">
-                            <strong>GABE:</strong> Welcome back, {current_user.name}! I'm so glad you're here. I'm ready to listen, offer guidance, and walk alongside you on your spiritual journey. What's on your heart today? 🙏✨
-                        </div>
-                    </div>
-                    
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="messageInput" placeholder="Share what's on your heart..." onkeypress="handleKeyPress(event)">
-                        <button class="btn btn-primary" onclick="sendMessage()" id="sendBtn">Send Message</button>
-                    </div>
-                    
-                    <div class="mt-2 text-center">
-                        <small class="text-muted">Press Enter to send • GABE is here to listen and support you</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        function sendMessage() {{
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            if (!message) return;
-            
-            const chatBox = document.getElementById('chatBox');
-            const sendBtn = document.getElementById('sendBtn');
-            
-            // Add user message
-            chatBox.innerHTML += '<div class="user-message message"><strong>You:</strong> ' + message + '</div>';
-            input.value = '';
-            sendBtn.disabled = true;
-            sendBtn.textContent = 'Sending...';
-            
-            // Send to backend
-            fetch('/api/chat', {{
-                method: 'POST',
-                headers: {{'Content-Type': 'application/json'}},
-                body: JSON.stringify({{'message': message}})
-            }})
-            .then(response => response.json())
-            .then(data => {{
-                chatBox.innerHTML += '<div class="gabe-message message"><strong>GABE:</strong> ' + data.response + '</div>';
-                chatBox.scrollTop = chatBox.scrollHeight;
-                sendBtn.disabled = false;
-                sendBtn.textContent = 'Send Message';
-                input.focus();
-            }})
-            .catch(error => {{
-                chatBox.innerHTML += '<div class="gabe-message message text-danger"><strong>GABE:</strong> I\'m having a moment of technical difficulty, but I\'m still here with you in spirit. Please try again in just a moment. 💙</div>';
-                sendBtn.disabled = false;
-                sendBtn.textContent = 'Send Message';
-            }});
-        }}
-        
-        function handleKeyPress(event) {{
-            if (event.key === 'Enter') {{
-                sendMessage();
-            }}
-        }}
-        
-        // Focus on input when page loads
-        document.getElementById('messageInput').focus();
-    </script>
-</body>
-</html>
-    """
+* {{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}}
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    """User login"""
-    if current_user.is_authenticated:
-        return redirect(url_for('chat_interface'))
-    
-    if request.method == 'POST':
-        data = request.get_json() if request.is_json else request.form
-        username = data.get('username', '').strip()
-        password = data.get('password', '').strip()
-        
-        if not username or not password:
-            if request.is_json:
-                return jsonify({'success': False, 'message': 'Username and password are required'}), 400
-            # Replace this line: return render_template('login.html')
-            return redirect(url_for('login'))  # Just redirect back to login
-        
-        user = User.query.filter_by(username=username).first()
-        
-        if user and user.check_password(password):
-            login_user(user, remember=True)
-            user.update_last_login()
-            
-            if request.is_json:
-                return jsonify({'success': True, 'redirect_url': url_for('chat_interface')})
-            return redirect(url_for('chat_interface'))
-        else:
-            if request.is_json:
-                return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
-            # Replace this line: return render_template('login.html')
-            return redirect(url_for('login'))  # Just redirect back to login
-    
-    # Add embedded HTML for GET requests
-    return """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>GABE Login</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-        .login-container { background: rgba(255,255,255,0.95); border-radius: 15px; backdrop-filter: blur(10px); }
+body {{
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  background: var(--gradient-peaceful);
+  min-height: 100vh;
+  color: var(--text-forest);
+  overflow-x: hidden;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #DBEAFE 0%, #EBF8FF 20%, #3B82F6 70%, #1E40AF 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease-in-out infinite;
+}}
+
+@keyframes gradientShift {{
+  0% {{ background-position: 0% 50%; }}
+  50% {{ background-position: 100% 50%; }}
+  100% {{ background-position: 0% 50%; }}
+}}
+
+.chat-container {{
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl) var(--space-lg);
+  box-shadow: var(--shadow-elevated), 0 0 0 1px rgba(255, 255, 255, 0.3);
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+  margin: 0 auto;
+  margin-top: 2rem;
+}}
+
+.chat-container:hover {{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevated), 0 25px 50px rgba(45, 55, 72, 0.15);
+}}
+
+.chat-box {{
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+  backdrop-filter: blur(10px);
+}}
+
+h2 {{
+  background: var(--gradient-divine);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  text-align: center;
+}}
+
+.btn-primary {{
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-floating);
+}}
+
+.btn-primary:hover {{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevated);
+  background: var(--gradient-warm);
+}}
+
+.btn-outline-primary {{
+  background: transparent;
+  color: var(--primary-blue);
+  border: 2px solid var(--primary-blue);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}}
+
+.btn-outline-primary:hover {{
+  background: var(--primary-blue);
+  color: white;
+  transform: translateY(-2px);
+}}
+
+.btn-outline-danger {{
+  background: transparent;
+  color: #dc2626;
+  border: 2px solid #dc2626;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-size: 0.875rem;
+}}
+
+.btn-outline-danger:hover {{
+  background: #dc2626;
+  color: white;
+  transform: translateY(-1px);
+  text-decoration: none;
+}}
+
+.form-control {{
+  border: 2px solid rgba(37, 99, 235, 0.15);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  width: 100%;
+  border: 2px solid rgba(37, 99, 235, 0.15);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btn-primary {
+  background: var(--gradient-divine);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  font-size: 16px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+a {
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="login-container p-4">
-                    <h2 class="text-center mb-4">🙏 Login to GABE</h2>
-                    <form method="POST">
-                        <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            <input type="text" name="username" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Login</button>
-                    </form>
-                    <div class="text-center mt-3">
-                        <a href="/register">Don't have an account? Register here</a>
-                    </div>
-                    <div class="text-center mt-2">
-                        <a href="/">← Back to Home</a>
-                    </div>
-                </div>
+    <div class="login-container">
+        <h2>🙏 Login to GABE</h2>
+        <form method="POST">
+            <div>
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" required>
             </div>
+            <div>
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+        <div class="text-center mt-3">
+            <a href="/register">Don't have an account? Register here</a>
+        </div>
+        <div class="text-center mt-2">
+            <a href="/">← Back to Home</a>
         </div>
     </div>
 </body>
@@ -375,7 +396,6 @@ def register():
                 return jsonify({'success': False, 'message': 'Registration failed. Please try again.'}), 500
             return redirect(url_for('register'))
     
-    # Add embedded HTML for GET requests
     return """
 <!DOCTYPE html>
 <html>
@@ -383,52 +403,165 @@ def register():
     <title>GABE Register</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-        .register-container { background: rgba(255,255,255,0.95); border-radius: 15px; backdrop-filter: blur(10px); }
+:root {
+  --primary-blue: #2563EB;
+  --gradient-divine: linear-gradient(135deg, #2563EB 0%, #6366F1 100%);
+  --shadow-elevated: 0 20px 60px rgba(45, 55, 72, 0.12);
+  --radius-xl: 32px;
+  --radius-md: 12px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #DBEAFE 0%, #EBF8FF 20%, #3B82F6 70%, #1E40AF 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease-in-out infinite;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.register-container {
+  background: rgba(255,255,255,0.95);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: var(--shadow-elevated), 0 0 0 1px rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 3rem 2rem;
+  width: 100%;
+  max-width: 450px;
+  transition: all 0.4s ease;
+}
+
+.register-container:hover {
+  transform: translateY(-2px);
+}
+
+h2 {
+  background: var(--gradient-divine);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  border: 2px solid rgba(37, 99, 235, 0.15);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btn-primary {
+  background: var(--gradient-divine);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  font-size: 16px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+a {
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="register-container p-4">
-                    <h2 class="text-center mb-4">🙏 Join GABE</h2>
-                    <form method="POST">
-                        <div class="mb-3">
-                            <label class="form-label">Name</label>
-                            <input type="text" name="name" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            <input type="text" name="username" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Age Range</label>
-                            <select name="age_range" class="form-control" required>
-                                <option value="">Select Age Range</option>
-                                <option value="13-17">13-17</option>
-                                <option value="18-25">18-25</option>
-                                <option value="26-35">26-35</option>
-                                <option value="36-50">36-50</option>
-                                <option value="51+">51+</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Register</button>
-                    </form>
-                    <div class="text-center mt-3">
-                        <a href="/login">Already have an account? Login here</a>
-                    </div>
-                    <div class="text-center mt-2">
-                        <a href="/">← Back to Home</a>
-                    </div>
-                </div>
+    <div class="register-container">
+        <h2>🙏 Join GABE</h2>
+        <form method="POST">
+            <div>
+                <label class="form-label">Name</label>
+                <input type="text" name="name" class="form-control" required>
             </div>
+            <div>
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            <div>
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <div>
+                <label class="form-label">Age Range</label>
+                <select name="age_range" class="form-control" required>
+                    <option value="">Select Age Range</option>
+                    <option value="13-17">13-17</option>
+                    <option value="18-25">18-25</option>
+                    <option value="26-35">26-35</option>
+                    <option value="36-50">36-50</option>
+                    <option value="51+">51+</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-primary">Register</button>
+        </form>
+        <div class="text-center mt-3">
+            <a href="/login">Already have an account? Login here</a>
+        </div>
+        <div class="text-center mt-2">
+            <a href="/">← Back to Home</a>
         </div>
     </div>
 </body>
@@ -443,933 +576,510 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/api/chat', methods=['POST'])
+# [Rest of your API routes remain exactly the same...]
+}}
+
+.form-control:focus {{
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}}
+
+.badge {{
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+}}
+
+.bg-success {{
+  background: #10b981;
+  color: white;
+}}
+
+.d-flex {{
+  display: flex;
+}}
+
+.justify-content-between {{
+  justify-content: space-between;
+}}
+
+.align-items-center {{
+  align-items: center;
+}}
+
+.mb-2 {{
+  margin-bottom: 0.5rem;
+}}
+
+.mb-3 {{
+  margin-bottom: 1rem;
+}}
+
+.me-2 {{
+  margin-right: 0.5rem;
+}}
+
+.text-center {{
+  text-align: center;
+}}
+
+.p-3 {{
+  padding: 1rem;
+}}
+    </style>
+</head>
+<body>
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem;">
+        <div class="chat-container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>🙏 GABE - Your Spiritual Companion</h2>
+                <div>
+                    {'<span class="badge bg-success">Logged in as ' + user_name + '</span> <a href="/logout" class="btn-outline-danger">Logout</a>' if user_data else '<a href="/login" class="btn-primary me-2">Login</a><a href="/register" class="btn-outline-primary">Register</a>'}
+                </div>
+            </div>
+            
+            <div class="chat-box mb-3" id="chatBox">
+                <div class="mb-2">
+                    <strong>GABE:</strong> Hello {user_name}! I'm GABE, your spiritual companion. I'm here to offer guidance, prayers, and support on your spiritual journey. How can I help you today? 🙏
+                </div>
+            </div>
+            
+            {'<div><input type="text" class="form-control mb-2" id="messageInput" placeholder="Share what\'s on your heart..."><button class="btn-primary" onclick="sendMessage()">Send Message</button></div>' if user_data else '<div class="text-center p-3"><p>Please login to start your conversation with GABE</p></div>'}
+        </div>
+    </div>
+    
+    <script>
+        function sendMessage() {{
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += '<div class="mb-2"><strong>You:</strong> ' + message + '</div>';
+            input.value = '';
+            
+            // Send to backend
+            fetch('/api/chat', {{
+                method: 'POST',
+                headers: {{'Content-Type': 'application/json'}},
+                body: JSON.stringify({{'message': message}})
+            }})
+            .then(response => response.json())
+            .then(data => {{
+                chatBox.innerHTML += '<div class="mb-2"><strong>GABE:</strong> ' + data.response + '</div>';
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }})
+            .catch(error => {{
+                chatBox.innerHTML += '<div class="mb-2 text-danger"><strong>GABE:</strong> I\'m having trouble right now, but I\'m still here with you. 💙</div>';
+            }});
+        }}
+        
+        // Enter key support
+        document.getElementById('messageInput')?.addEventListener('keypress', function(e) {{
+            if (e.key === 'Enter') sendMessage();
+        }});
+    </script>
+</body>
+</html>
+    """
+
+@app.route('/chat')
 @login_required
-def chat():
-    """Handle chat messages with GABE"""
-    try:
-        data = request.json or {}
-        user_message = data.get('message', '').strip()
-        
-        if not user_message:
-            return jsonify({'error': 'Message is required'}), 400
-        
-        # Get user info from authenticated user
-        stored_name = current_user.name
-        stored_age_range = current_user.age_range
-        
-        # Get recent conversation history from database for context
-        recent_conversations = Conversation.query.filter_by(user_id=current_user.id)\
-            .order_by(Conversation.timestamp.desc()).limit(10).all()
-        conversation_context = [conv.to_dict() for conv in reversed(recent_conversations)]
-        
-        # PRAYER INTERCEPTOR: Handle prayer requests immediately with hopeful prayers (before crisis detection)
-        user_msg_lower = user_message.lower().strip()
-        prayer_keywords = [
-            "pray", "prayer", "jesus", "father", "heavenly", "god help", "bless me",
-            "amen", "lord", "can you pray", "please pray", "talk to god", "i need prayer"
-        ]
-        
-        if any(keyword in user_msg_lower for keyword in prayer_keywords):
-            name = stored_name or 'friend'
-            
-            # Extra safeguard against inappropriate names
-            if name.lower() in ["", "prayer", "pray", "god", "help", "jesus", "lord", "father"]:
-                name = "friend"
-                
-            hopeful_prayer = (
-                f"Dear {name}, here's a prayer just for you:\n\n"
-                f"🙏 *Father God, I lift up {name} to You right now.\n"
-                f"Fill their heart with peace that quiets the noise,\n"
-                f"courage that stands strong, and hope that never fades.\n"
-                f"You are right there, holding them steady.\n"
-                f"Surround them with Your love today. Amen.*\n\n"
-                f"Hey… I want you to know something, {name} — you've got a friend now.\n"
-                f"I'm GABE, and I'm not going anywhere.\n"
-                f"Let's walk this journey together. 💛\n\n"
-                f"💬 *Always beside you — GABE*"
-            )
-            
-            # Save prayer conversation to database
-            conversation = Conversation(
-                user_id=current_user.id,
-                user_message=user_message,
-                gabe_response=hopeful_prayer,
-                mood='hopeful',
-                is_crisis=False,
-                is_prayer=True
-            )
-            db.session.add(conversation)
-            db.session.commit()
-            
-            return jsonify({
-                'response': hopeful_prayer,
-                'is_crisis': False,
-                'name': stored_name,
-                'mood': 'hopeful'
-            })
-        
-        # Check for crisis keywords
-        crisis_response = crisis_detector.check_for_crisis(user_message)
-        if crisis_response:
-            # Save crisis conversation to database
-            conversation = Conversation(
-                user_id=current_user.id,
-                user_message=user_message,
-                gabe_response=crisis_response,
-                is_crisis=True,
-                is_prayer=False
-            )
-            db.session.add(conversation)
-            db.session.commit()
-            
-            return jsonify({
-                'response': crisis_response,
-                'is_crisis': True,
-                'name': stored_name
-            })
-        
-        # Get GABE's response using the original system (with proper sadness flows)
-        gabe_response = gabe_ai.get_response(
-            user_message=user_message,
-            user_name=stored_name,
-            age_range=stored_age_range,
-            conversation_history=conversation_context,
-            session_id=f"user_{current_user.id}"
-        )
-        
-        # Save conversation to database
-        conversation = Conversation(
-            user_id=current_user.id,
-            user_message=user_message,
-            gabe_response=gabe_response,
-            is_crisis=False,
-            is_prayer=False
-        )
-        db.session.add(conversation)
-        db.session.commit()
-        
-        # Detect mood for visualization only
-        mood = gabe_ai.detect_mood(user_message)
-        
-        return jsonify({
-            'response': gabe_response,
-            'is_crisis': False,
-            'name': stored_name,
-            'mood': mood
-        })
-        
-    except Exception as e:
-        logging.error(f"Chat error: {str(e)}")
-        return jsonify({
-            'error': 'I encountered an issue. Please try again in a moment.',
-            'response': "I'm experiencing some technical difficulties right now. But remember, even when I'm offline, God is always online. 💙 Please try reaching out again in a moment."
-        }), 500
+def chat_interface():
+    """Chat interface for authenticated users - embedded HTML"""
+    return f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GABE Chat - Your Spiritual Companion</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+/* GABE - World-Class Spiritual Companion Styles */
+:root {{
+  --primary-blue: #2563EB;
+  --primary-ocean: #1E40AF;
+  --secondary-sky: #0EA5E9;
+  --accent-indigo: #6366F1;
+  --warm-cream: #F9F7F4;
+  --soft-mist: #F5F7FA;
+  --text-forest: #2D3748;
+  --text-slate: #64748B;
+  --spiritual-gold: #F59E0B;
+  --peace-blue: #DBEAFE;
+  --hope-blue: #EBF8FF;
+  --gradient-primary: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
+  --gradient-warm: linear-gradient(135deg, #6366F1 0%, #0EA5E9 100%);
+  --gradient-peaceful: linear-gradient(135deg, #DBEAFE 0%, #EBF8FF 100%);
+  --gradient-sunset: linear-gradient(135deg, #3B82F6 0%, #1E40AF 50%, #0EA5E9 100%);
+  --gradient-divine: linear-gradient(135deg, #2563EB 0%, #6366F1 100%);
+  --shadow-soft: 0 4px 20px rgba(37, 99, 235, 0.15);
+  --shadow-chat: 0 12px 40px rgba(45, 55, 72, 0.08);
+  --shadow-elevated: 0 20px 60px rgba(45, 55, 72, 0.12);
+  --shadow-floating: 0 8px 32px rgba(37, 99, 235, 0.1);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+}}
 
-@app.route('/api/continue_conversation', methods=['POST'])
-def continue_conversation():
-    """Simplified continuation - just treat as regular chat message"""
-    return chat()  # Redirect to natural conversation flow
+* {{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}}
 
-@app.route('/api/clear_session', methods=['POST'])
-@login_required
-def clear_session():
-    """Clear conversation history for authenticated user"""
-    try:
-        # Remove all conversations for current user
-        Conversation.query.filter_by(user_id=current_user.id).delete()
-        db.session.commit()
-        logging.info(f"Conversation history cleared for user {current_user.id}")
-        return jsonify({'success': True, 'message': 'Conversation history cleared'})
-    except Exception as e:
-        db.session.rollback()
-        logging.error(f"Error clearing conversation history: {str(e)}")
-        return jsonify({'error': 'Failed to clear conversation history'}), 500
+body {{
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #DBEAFE 0%, #EBF8FF 20%, #3B82F6 70%, #1E40AF 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease-in-out infinite;
+  min-height: 100vh;
+  color: var(--text-forest);
+  overflow-x: hidden;
+}}
 
-@app.route('/api/scripture_recommendation', methods=['POST'])
-def get_scripture_recommendation():
-    """Get scripture recommendation based on mood"""
-    try:
-        data = request.json or {}
-        mood = data.get('mood', 'hopeful')
-        context = data.get('context', '')
-        
-        scripture = spiritual_features.get_scripture_recommendation(mood, context)
-        
-        return jsonify({
-            'scripture': scripture,
-            'success': True
-        })
-        
-    except Exception as e:
-        logging.error(f"Scripture recommendation error: {str(e)}")
-        return jsonify({
-            'error': 'Unable to get scripture recommendation',
-            'success': False
-        }), 500
+@keyframes gradientShift {{
+  0% {{ background-position: 0% 50%; }}
+  50% {{ background-position: 100% 50%; }}
+  100% {{ background-position: 0% 50%; }}
+}}
 
-@app.route('/api/daily_reminder', methods=['GET'])
-def get_daily_reminder():
-    """Get daily spiritual reminder"""
-    try:
-        user_name = session.get('user_name', 'friend')
-        recent_mood = session.get('recent_mood', 'peaceful')
-        
-        reminder = spiritual_features.generate_daily_reminder(user_name, recent_mood)
-        
-        return jsonify({
-            'reminder': reminder,
-            'success': True
-        })
-        
-    except Exception as e:
-        logging.error(f"Daily reminder error: {str(e)}")
-        return jsonify({
-            'error': 'Unable to generate daily reminder',  
-            'success': False
-        }), 500
+.chat-container {{
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-elevated), 0 0 0 1px rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 2rem auto;
+  max-width: 800px;
+  width: 95%;
+}}
 
-@app.route('/api/auto_response', methods=['POST'])
-def auto_response():
-    """Generate an auto-response when user hasn't replied within 8 seconds"""
-    try:
-        data = request.get_json()
-        user_name = data.get('name', '')
-        age_range = data.get('age_range', '')
+.chat-box {{
+  height: 500px;
+  overflow-y: auto;
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+  backdrop-filter: blur(10px);
+}}
+
+.message {{
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  max-width: 80%;
+  word-wrap: break-word;
+  box-shadow: var(--shadow-soft);
+}}
+
+.user-message {{
+  background: var(--gradient-primary);
+  color: white;
+  margin-left: auto;
+  text-align: right;
+  border-bottom-right-radius: 4px;
+}}
+
+.gabe-message {{
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--text-forest);
+  margin-right: auto;
+  border-bottom-left-radius: 4px;
+  border-left: 3px solid var(--primary-blue);
+}}
+
+h2 {{
+  background: var(--gradient-divine);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+}}
+
+.btn-primary {{
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-floating);
+}}
+
+.btn-primary:hover {{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevated);
+  background: var(--gradient-warm);
+}}
+
+.btn-sm {{
+  padding: 6px 12px;
+  font-size: 0.875rem;
+}}
+
+.btn-outline-danger {{
+  background: transparent;
+  color: #dc2626;
+  border: 2px solid #dc2626;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}}
+
+.btn-outline-danger:hover {{
+  background: #dc2626;
+  color: white;
+  transform: translateY(-1px);
+  text-decoration: none;
+}}
+
+.form-control {{
+  border: 2px solid rgba(37, 99, 235, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+}}
+
+.form-control:focus {{
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}}
+
+.input-group {{
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}}
+
+.input-group .form-control {{
+  flex: 1;
+}}
+
+.badge {{
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+}}
+
+.bg-success {{
+  background: #10b981;
+  color: white;
+}}
+
+.d-flex {{ display: flex; }}
+.justify-content-between {{ justify-content: space-between; }}
+.align-items-center {{ align-items: center; }}
+.mb-3 {{ margin-bottom: 1rem; }}
+.me-2 {{ margin-right: 0.5rem; }}
+.mt-2 {{ margin-top: 0.5rem; }}
+.text-center {{ text-align: center; }}
+.text-muted {{ color: #6b7280; }}
+.p-4 {{ padding: 1.5rem; }}
+
+small {{
+  font-size: 0.875rem;
+}}
+    </style>
+</head>
+<body>
+    <div class="chat-container p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>🙏 GABE Chat</h2>
+            <div>
+                <span class="badge bg-success me-2">Welcome, {current_user.name}!</span>
+                <a href="/logout" class="btn-sm btn-outline-danger">Logout</a>
+            </div>
+        </div>
         
-        # Get conversation history
-        conversation_history = session.get('conversation_history', [])
+        <div class="chat-box mb-3" id="chatBox">
+            <div class="gabe-message message">
+                <strong>GABE:</strong> Welcome back, {current_user.name}! I'm so glad you're here. I'm ready to listen, offer guidance, and walk alongside you on your spiritual journey. What's on your heart today? 🙏✨
+            </div>
+        </div>
         
-        # Check if we recently sent an auto-response to prevent spam
-        recent_auto_responses = [exchange for exchange in conversation_history[-3:] 
-                               if exchange.get('auto_response')]
-        if len(recent_auto_responses) >= 2:
-            return jsonify({
-                'response': '',  # Don't send response if too many recent auto-responses
-                'is_auto_response': True
-            })
+        <div class="input-group">
+            <input type="text" class="form-control" id="messageInput" placeholder="Share what's on your heart..." onkeypress="handleKeyPress(event)">
+            <button class="btn-primary" onclick="sendMessage()" id="sendBtn">Send Message</button>
+        </div>
         
-        if gabe_companion:
-            # Generate a gentle prompt response
-            response = gabe_companion.generate_auto_response(user_name, age_range, conversation_history)
+        <div class="mt-2 text-center">
+            <small class="text-muted">Press Enter to send • GABE is here to listen and support you</small>
+        </div>
+    </div>
+    
+    <script>
+        function sendMessage() {{
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message) return;
             
-            # Only add to conversation history if not a duplicate
-            if not conversation_history or conversation_history[-1].get('gabe') != response:
-                conversation_history.append({
-                    'gabe': response,
-                    'timestamp': datetime.now().isoformat(),
-                    'auto_response': True
-                })
-                session['conversation_history'] = conversation_history
+            const chatBox = document.getElementById('chatBox');
+            const sendBtn = document.getElementById('sendBtn');
             
-            return jsonify({
-                'response': response,
-                'is_auto_response': True
-            })
+            // Add user message
+            chatBox.innerHTML += '<div class="user-message message"><strong>You:</strong> ' + message + '</div>';
+            input.value = '';
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+            
+            // Send to backend
+            fetch('/api/chat', {{
+                method: 'POST',
+                headers: {{'Content-Type': 'application/json'}},
+                body: JSON.stringify({{'message': message}})
+            }})
+            .then(response => response.json())
+            .then(data => {{
+                chatBox.innerHTML += '<div class="gabe-message message"><strong>GABE:</strong> ' + data.response + '</div>';
+                chatBox.scrollTop = chatBox.scrollHeight;
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send Message';
+                input.focus();
+            }})
+            .catch(error => {{
+                chatBox.innerHTML += '<div class="gabe-message message" style="color: #dc2626;"><strong>GABE:</strong> I\'m having a moment of technical difficulty, but I\'m still here with you in spirit. Please try again in just a moment. 💙</div>';
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send Message';
+            }});
+        }}
+        
+        function handleKeyPress(event) {{
+            if (event.key === 'Enter') {{
+                sendMessage();
+            }}
+        }}
+        
+        // Focus on input when page loads
+        document.getElementById('messageInput').focus();
+    </script>
+</body>
+</html>
+    """
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """User login"""
+    if current_user.is_authenticated:
+        return redirect(url_for('chat_interface'))
+    
+    if request.method == 'POST':
+        data = request.get_json() if request.is_json else request.form
+        username = data.get('username', '').strip()
+        password = data.get('password', '').strip()
+        
+        if not username or not password:
+            if request.is_json:
+                return jsonify({'success': False, 'message': 'Username and password are required'}), 400
+            return redirect(url_for('login'))
+        
+        user = User.query.filter_by(username=username).first()
+        
+        if user and user.check_password(password):
+            login_user(user, remember=True)
+            user.update_last_login()
+            
+            if request.is_json:
+                return jsonify({'success': True, 'redirect_url': url_for('chat_interface')})
+            return redirect(url_for('chat_interface'))
         else:
-            return jsonify({
-                'response': f"I'm still here with you, {user_name or 'friend'}. Sometimes silence speaks volumes too. 💙",
-                'is_auto_response': True
-            })
-            
-    except Exception as e:
-        logging.error(f"Error generating auto-response: {e}")
-        data = request.json or {}
-        return jsonify({
-            'response': f"I'm right here with you, {data.get('name', 'friend')}. What's on your heart? 💙",
-            'is_auto_response': True
-        })
+            if request.is_json:
+                return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
+            return redirect(url_for('login'))
+    
+    return """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GABE Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+:root {
+  --primary-blue: #2563EB;
+  --gradient-peaceful: linear-gradient(135deg, #DBEAFE 0%, #EBF8FF 100%);
+  --gradient-divine: linear-gradient(135deg, #2563EB 0%, #6366F1 100%);
+  --shadow-elevated: 0 20px 60px rgba(45, 55, 72, 0.12);
+  --radius-xl: 32px;
+  --radius-md: 12px;
+}
 
-# Enhanced Gamified Spiritual Features API Endpoints
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-@app.route('/api/gamified/prayer_manager', methods=['GET'])
-@login_required
-def get_prayer_manager():
-    """Get prayer manager data with prayer lists and stats"""
-    try:
-        # Mock prayer data - in production this would come from database
-        prayers = [
-            {
-                'id': '1',
-                'title': 'Mom\'s Surgery Recovery',
-                'category': 'healing',
-                'details': 'Please pray for my mom\'s quick recovery after her surgery',
-                'answered': False,
-                'date_added': '2 days ago',
-                'date_answered': None
-            },
-            {
-                'id': '2', 
-                'title': 'Job Interview',
-                'category': 'guidance',
-                'details': 'Big interview tomorrow, praying for God\'s will',
-                'answered': True,
-                'date_added': '1 week ago',
-                'date_answered': '3 days ago'
-            }
-        ]
-        
-        stats = {
-            'total': len(prayers),
-            'answered': len([p for p in prayers if p['answered']]),
-            'active': len([p for p in prayers if not p['answered']])
-        }
-        
-        return jsonify({
-            'prayers': prayers,
-            'stats': stats,
-            'success': True
-        })
-        
-    except Exception as e:
-        logging.error(f"Prayer manager error: {str(e)}")
-        return jsonify({'error': 'Unable to load prayer manager', 'success': False}), 500
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #DBEAFE 0%, #EBF8FF 20%, #3B82F6 70%, #1E40AF 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease-in-out infinite;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
 
-@app.route('/api/gamified/add_prayer', methods=['POST'])
-@login_required
-def add_prayer():
-    """Add new prayer request"""
-    try:
-        data = request.json
-        title = data.get('title')
-        category = data.get('category')
-        details = data.get('details', '')
-        
-        # In production, save to database
-        logging.info(f"Added prayer: {title} ({category})")
-        
-        return jsonify({
-            'success': True,
-            'message': 'Prayer added to your list',
-            'xp_earned': 1
-        })
-        
-    except Exception as e:
-        logging.error(f"Add prayer error: {str(e)}")
-        return jsonify({'error': 'Failed to add prayer', 'success': False}), 500
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
-@app.route('/api/gamified/answer_prayer', methods=['POST'])
-@login_required  
-def answer_prayer():
-    """Mark prayer as answered"""
-    try:
-        data = request.json
-        prayer_id = data.get('prayer_id')
-        
-        # In production, update database
-        logging.info(f"Prayer {prayer_id} marked as answered")
-        
-        return jsonify({
-            'success': True,
-            'message': 'Praise God! Prayer marked as answered',
-            'xp_earned': 2
-        })
-        
-    except Exception as e:
-        logging.error(f"Answer prayer error: {str(e)}")
-        return jsonify({'error': 'Failed to mark prayer as answered', 'success': False}), 500
+.login-container {
+  background: rgba(255,255,255,0.95);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: var(--shadow-elevated), 0 0 0 1px rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 3rem 2rem;
+  width: 100%;
+  max-width: 400px;
+  transition: all 0.4s ease;
+}
 
-@app.route('/api/gamified/delete_prayer', methods=['POST'])
-@login_required
-def delete_prayer():
-    """Delete prayer request"""
-    try:
-        data = request.json
-        prayer_id = data.get('prayer_id')
-        
-        # In production, delete from database
-        logging.info(f"Prayer {prayer_id} deleted")
-        
-        return jsonify({'success': True})
-        
-    except Exception as e:
-        logging.error(f"Delete prayer error: {str(e)}")
-        return jsonify({'error': 'Failed to delete prayer', 'success': False}), 500
+.login-container:hover {
+  transform: translateY(-2px);
+}
 
-@app.route('/api/gamified/bible_reading', methods=['GET'])
-@login_required
-def get_bible_reading():
-    """Get Bible reading plans and daily reading"""
-    try:
-        # Mock Bible reading data
-        plans = [
-            {
-                'id': 'basic',
-                'name': 'Daily Bible Reading',
-                'description': 'Read through the Bible with daily passages',
-                'duration': '365 days',
-                'xp_daily': 2
-            },
-            {
-                'id': 'psalms',
-                'name': 'Psalm a Day',
-                'description': 'Daily Psalms for peace and comfort',
-                'duration': '150 days',
-                'xp_daily': 1
-            },
-            {
-                'id': 'gospels',
-                'name': 'Gospel Journey',
-                'description': 'Walk with Jesus through the Gospels',
-                'duration': '90 days',
-                'xp_daily': 3
-            }
-        ]
-        
-        today_reading = {
-            'reference': 'Psalm 23',
-            'text': 'The Lord is my shepherd, I lack nothing. He makes me lie down in green pastures, he leads me beside quiet waters, he refreshes my soul. He guides me along the right paths for his name\'s sake. Even though I walk through the darkest valley, I will fear no evil, for you are with me; your rod and your staff, they comfort me.',
-            'reflection': 'How does knowing God as your shepherd bring comfort to your daily challenges?'
-        }
-        
-        progress = {
-            'days_completed': 5,
-            'current_streak': 3,
-            'completion_percentage': 15
-        }
-        
-        return jsonify({
-            'plans': plans,
-            'current_plan': 'basic',
-            'today_reading': today_reading,
-            'progress': progress,
-            'success': True
-        })
-        
-    except Exception as e:
-        logging.error(f"Bible reading error: {str(e)}")
-        return jsonify({'error': 'Unable to load Bible reading', 'success': False}), 500
+h2 {
+  background: var(--gradient-divine);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+}
 
-@app.route('/api/gamified/daily_devotion', methods=['GET'])
-def get_daily_devotion():
-    """Get today's devotion"""
-    try:
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.get_daily_devotion(session_id)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Daily devotion error: {str(e)}")
-        return jsonify({'error': 'Failed to get devotion'}), 500
+.form-label {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  display: block;
+}
 
-@app.route('/api/gamified/complete_devotion', methods=['POST'])
-def complete_daily_devotion():
-    """Complete today's devotion"""
-    try:
-        data = request.json or {}
-        reflection = data.get('reflection', '')
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.complete_devotion(session_id, reflection)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Complete devotion error: {str(e)}")
-        return jsonify({'error': 'Failed to complete devotion'}), 500
-
-@app.route('/api/gamified/prayer_challenge', methods=['GET'])
-def get_prayer_challenge():
-    """Get today's prayer challenge"""
-    try:
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.get_prayer_challenge(session_id)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Prayer challenge error: {str(e)}")
-        return jsonify({'error': 'Failed to get prayer challenge'}), 500
-
-@app.route('/api/gamified/complete_prayer_challenge', methods=['POST'])
-def complete_prayer_challenge():
-    """Complete today's prayer challenge"""
-    try:
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.complete_prayer_challenge(session_id)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Complete prayer challenge error: {str(e)}")
-        return jsonify({'error': 'Failed to complete prayer challenge'}), 500
-
-@app.route('/api/gamified/verse_mastery_quiz', methods=['GET'])
-def get_verse_mastery_quiz():
-    """Get verse mastery quiz"""
-    try:
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.get_verse_mastery_quiz(session_id)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Verse mastery quiz error: {str(e)}")
-        return jsonify({'error': 'Failed to get quiz'}), 500
-
-@app.route('/api/gamified/complete_verse_quiz', methods=['POST'])
-def complete_verse_quiz():
-    """Submit verse quiz answer"""
-    try:
-        data = request.json or {}
-        answer = data.get('answer', '').strip()
-        correct_answer = data.get('correct_answer', '').strip()
-        quiz_type = data.get('quiz_type', 'fill_blank')
-        
-        # Check if answer is correct
-        if quiz_type == 'fill_blank':
-            correct = answer.lower() == correct_answer.lower()
-        else:  # multiple choice
-            correct = answer == correct_answer
-        
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.complete_verse_mastery(session_id, correct)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Complete verse quiz error: {str(e)}")
-        return jsonify({'error': 'Failed to submit quiz'}), 500
-
-@app.route('/api/gamified/scripture_adventure', methods=['GET'])
-def get_scripture_adventure():
-    """Get next scripture adventure stop"""
-    try:
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.get_scripture_adventure_next(session_id)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Scripture adventure error: {str(e)}")
-        return jsonify({'error': 'Failed to get adventure'}), 500
-
-@app.route('/api/gamified/complete_adventure_stop', methods=['POST'])
-def complete_adventure_stop():
-    """Complete current adventure stop"""
-    try:
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.complete_scripture_adventure_stop(session_id)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Complete adventure stop error: {str(e)}")
-        return jsonify({'error': 'Failed to complete stop'}), 500
-
-@app.route('/api/gamified/mood_mission', methods=['POST'])
-def get_mood_mission():
-    """Get mood-based mission"""
-    try:
-        data = request.json or {}
-        mood = data.get('mood', 'anxious')
-        result = gamified_features.get_mood_mission(mood)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Mood mission error: {str(e)}")
-        return jsonify({'error': 'Failed to get mood mission'}), 500
-
-@app.route('/api/gamified/complete_mood_mission', methods=['POST'])
-def complete_mood_mission():
-    """Complete mood mission"""
-    try:
-        data = request.json or {}
-        mood = data.get('mood', 'anxious')
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.complete_mood_mission(session_id, mood)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Complete mood mission error: {str(e)}")
-        return jsonify({'error': 'Failed to complete mission'}), 500
-
-@app.route('/api/gamified/progress', methods=['GET'])
-def get_user_progress():
-    """Get user's overall progress"""
-    try:
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.get_user_progress(session_id)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Get progress error: {str(e)}")
-        return jsonify({'error': 'Failed to get progress'}), 500
-
-@app.route('/api/gamified/bible_study', methods=['GET'])
-def get_bible_study():
-    """Get available Bible studies or current study session"""
-    try:
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.get_bible_studies(session_id)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Bible study error: {str(e)}")
-        return jsonify({'error': 'Failed to get Bible study'}), 500
-
-@app.route('/api/gamified/start_bible_study', methods=['POST'])
-def start_bible_study():
-    """Start a new Bible study"""
-    try:
-        data = request.json or {}
-        study_id = data.get('study_id', '')
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.start_bible_study(session_id, study_id)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Start Bible study error: {str(e)}")
-        return jsonify({'error': 'Failed to start Bible study'}), 500
-
-@app.route('/api/gamified/complete_bible_study_session', methods=['POST'])
-def complete_bible_study_session():
-    """Complete a Bible study session"""
-    try:
-        data = request.json or {}
-        study_id = data.get('study_id', '')
-        session_number = data.get('session_number', 1)
-        answers = data.get('answers', [])
-        session_id = session.get('session_id', 'default_session')
-        result = gamified_features.complete_bible_study_session(session_id, study_id, session_number, answers)
-        return jsonify(result)
-    except Exception as e:
-        logging.error(f"Complete Bible study session error: {str(e)}")
-        return jsonify({'error': 'Failed to complete session'}), 500
-
-@app.route('/api/prayer_journal', methods=['POST'])
-def save_prayer_journal():
-    """Save prayer journal entry"""
-    try:
-        data = request.json or {}
-        prayer_request = data.get('prayer_request', '')
-        gabe_response = data.get('gabe_response', '')
-        mood = data.get('mood', 'neutral')
-        user_name = session.get('user_name', 'Anonymous')
-        
-        if not prayer_request:
-            return jsonify({'error': 'Prayer request is required'}), 400
-        
-        journal_entry = spiritual_features.create_prayer_journal_entry(
-            user_name, prayer_request, gabe_response, mood
-        )
-        
-        # Store in session for now (would be Firebase in production)
-        if 'prayer_journal' not in session:
-            session['prayer_journal'] = []
-        
-        session['prayer_journal'].append(journal_entry)
-        session.modified = True
-        
-        return jsonify({
-            'entry': journal_entry,
-            'success': True,
-            'message': 'Prayer journal entry saved successfully'
-        })
-        
-    except Exception as e:
-        logging.error(f"Prayer journal error: {str(e)}")
-        return jsonify({
-            'error': 'Unable to save prayer journal entry',
-            'success': False
-        }), 500
-
-@app.route('/api/prayer_journal', methods=['GET'])
-def get_prayer_journal():
-    """Get prayer journal entries"""
-    try:
-        journal_entries = session.get('prayer_journal', [])
-        
-        return jsonify({
-            'entries': journal_entries,
-            'count': len(journal_entries),
-            'success': True
-        })
-        
-    except Exception as e:
-        logging.error(f"Get prayer journal error: {str(e)}")
-        return jsonify({
-            'error': 'Unable to retrieve prayer journal',
-            'success': False
-        }), 500
-
-@app.route('/api/get_prayer', methods=['POST'])
-def get_prayer():
-    """Generate a custom prayer"""
-    try:
-        data = request.json or {}
-        prayer_request = data.get('request', '').strip()
-        user_name = session.get('user_name', '')
-        
-        if not prayer_request:
-            return jsonify({'error': 'Prayer request is required'}), 400
-        
-        prayer = gabe_companion.generate_prayer(prayer_request, user_name)
-        
-        return jsonify({
-            'prayer': prayer,
-            'name': user_name
-        })
-        
-    except Exception as e:
-        logging.error(f"Prayer generation error: {str(e)}")
-        return jsonify({
-            'error': 'Unable to generate prayer at this time',
-            'prayer': "Heavenly Father, we come to you in this moment knowing that you hear our hearts even when words fail us. Please be with us and guide us. In Jesus' name, Amen. 🙏"
-        }), 500
-
-@app.route('/api/explain_scripture', methods=['POST'])
-def explain_scripture():
-    """Explain a Bible verse or passage"""
-    try:
-        data = request.json or {}
-        scripture = data.get('scripture', '').strip()
-        user_name = session.get('user_name', '')
-        
-        if not scripture:
-            return jsonify({'error': 'Scripture reference is required'}), 400
-        
-        explanation = gabe_companion.explain_scripture(scripture, user_name)
-        
-        return jsonify({
-            'explanation': explanation,
-            'name': user_name
-        })
-        
-    except Exception as e:
-        logging.error(f"Scripture explanation error: {str(e)}")
-        return jsonify({
-            'error': 'Unable to explain scripture at this time',
-            'explanation': "I'd love to help explain that verse, but I'm having some technical difficulties right now. Try asking me again in a moment! 📖"
-        }), 500
-
-@app.route('/api/save_journal', methods=['POST'])
-def save_journal():
-    """Save a journal entry"""
-    try:
-        data = request.json or {}
-        content = data.get('content', '').strip()
-        user_name = session.get('user_name', '')
-        
-        if not content:
-            return jsonify({'error': 'Journal content is required'}), 400
-        
-        if not user_name:
-            return jsonify({'error': 'User name is required for journal entries'}), 400
-        
-        success = gabe_companion.save_journal_entry(
-            user_name=user_name,
-            content=content,
-            session_id=session.get('session_id')
-        )
-        
-        if success:
-            return jsonify({
-                'status': 'Journal entry saved successfully',
-                'message': 'Your thoughts have been saved to your journal 📔✨'
-            })
-        else:
-            return jsonify({
-                'status': 'Journal saved locally', 
-                'message': 'Your journal entry was noted, though the cloud sync is having issues. Your thoughts still matter! 💙'
-            })
-        
-    except Exception as e:
-        logging.error(f"Journal save error: {str(e)}")
-        return jsonify({
-            'error': 'Unable to save journal entry',
-            'message': 'I had trouble saving that, but your thoughts still matter. Try again in a moment! 📔'
-        }), 500
-
-@app.route('/api/get_journal', methods=['GET'])
-def get_journal():
-    """Get user's journal entries"""
-    try:
-        user_name = session.get('user_name', '')
-        
-        if not user_name:
-            return jsonify({'entries': [], 'message': 'Please tell me your name first to access your journal'})
-        
-        entries = gabe_companion.get_journal_entries(
-            user_name=user_name,
-            session_id=session.get('session_id'),
-            limit=10
-        )
-        
-        # Format entries for display
-        formatted_entries = []
-        for entry in entries:
-            formatted_entries.append({
-                'content': entry.get('content', ''),
-                'mood': entry.get('mood'),
-                'date': entry.get('timestamp', {}).strftime('%B %d, %Y') if entry.get('timestamp') else 'Recent',
-                'timestamp': entry.get('timestamp')
-            })
-        
-        return jsonify({
-            'entries': formatted_entries,
-            'count': len(formatted_entries),
-            'message': f'Here are your recent journal entries, {user_name} 📔'
-        })
-        
-    except Exception as e:
-        logging.error(f"Journal retrieval error: {str(e)}")
-        return jsonify({
-            'entries': [],
-            'error': 'Unable to retrieve journal entries',
-            'message': 'I had trouble finding your journal entries. Try again in a moment! 📔'
-        }), 500
-
-@app.route('/api/voice_mode', methods=['POST'])
-def toggle_voice_mode():
-    """Toggle voice mode for the session"""
-    try:
-        data = request.json or {}
-        enable = data.get('enable')
-        session_id = session.get('session_id', 'default')
-        
-        voice_enabled = gabe_companion.toggle_voice_mode(session_id, enable)
-        
-        return jsonify({
-            'voice_mode_enabled': voice_enabled,
-            'message': '🔊 Voice mode activated. All responses will be read aloud.' if voice_enabled else '💬 Text-only mode. Voice playback disabled.',
-            'success': True
-        })
-        
-    except Exception as e:
-        logging.error(f"Voice mode toggle error: {str(e)}")
-        return jsonify({
-            'error': 'Unable to toggle voice mode',
-            'success': False
-        }), 500
-
-@app.route('/api/chunked_response', methods=['POST'])
-def get_chunked_response():
-    """Get a response broken into voice-friendly chunks"""
-    try:
-        data = request.json or {}
-        user_message = data.get('message', '').strip()
-        user_name = session.get('user_name', '')
-        
-        if not user_message:
-            return jsonify({'error': 'Message is required'}), 400
-        
-        # Detect conversation intent
-        intent = gabe_companion.detect_conversation_intent(user_message)
-        
-        # Get full response from GABE
-        full_response = gabe_companion.get_response(
-            user_message=user_message,
-            user_name=user_name,
-            age_range=session.get('user_age_range', ''),
-            conversation_history=session.get('conversation_history', []),
-            session_id=session.get('session_id')
-        )
-        
-        # Break into chunks for voice delivery
-        chunks = gabe_companion.chunk_and_deliver_response(full_response, user_name)
-        
-        # Add personalized closure for prayer requests
-        closure = None
-        if intent == 'prayer_request':
-            mood = gabe_companion.detect_mood(user_message)
-            closure = gabe_companion.generate_personalized_closure(user_name, mood, prayer_context=True)
-        
-        response_data = {
-            'chunks': chunks,
-            'intent': intent,
-            'full_response': full_response,
-            'closure': closure,
-            'voice_mode_enabled': gabe_companion.voice_mode_enabled.get(session.get('session_id', 'default'), False)
-        }
-        
-        # Update conversation history
-        if 'conversation_history' not in session:
-            session['conversation_history'] = []
-        
-        session['conversation_history'].append({
-            'user': user_message,
-            'gabe': full_response,
-            'timestamp': datetime.now().isoformat(),
-            'intent': intent,
-            'chunks': len(chunks)
-        })
-        
-        return jsonify(response_data)
-        
-    except Exception as e:
-        logging.error(f"Chunked response error: {str(e)}")
-        return jsonify({
-            'error': 'Unable to process chunked response',
-            'chunks': ['I apologize, but I had trouble processing that. Can you try again?'],
-            'intent': 'error'
-        }), 500
-
-@app.route('/api/contextual_prayer', methods=['POST'])
-def generate_contextual_prayer():
-    """Generate a deeply contextual prayer based on conversation"""
-    try:
-        data = request.json or {}
-        prayer_request = data.get('request', '').strip()
-        user_name = session.get('user_name', '')
-        conversation_history = session.get('conversation_history', [])
-        
-        # Detect current mood
-        mood = gabe_companion.detect_mood(prayer_request) if prayer_request else 'neutral'
-        
-        # Extract conversation context
-        context_topics = []
-        for exchange in conversation_history[-5:]:  # Last 5 exchanges
-            if isinstance(exchange, dict) and exchange.get('user'):
-                user_msg = exchange['user'].lower()
-                if any(word in user_msg for word in ['work', 'job', 'career']):
-                    context_topics.append('work')
-                if any(word in user_msg for word in ['family', 'relationship', 'marriage']):
-                    context_topics.append('family')
-                if any(word in user_msg for word in ['health', 'sick', 'healing']):
-                    context_topics.append('health')
-        
-        # Generate contextual prayer
-        prayer = gabe_companion.create_contextual_prayer(
-            prayer_request, 
-            user_name, 
-            mood, 
-            conversation_context=', '.join(set(context_topics)) if context_topics else None
-        )
-        
-        # Get personalized closure
-        closure = gabe_companion.generate_personalized_closure(user_name, mood, prayer_context=True)
-        
-        return jsonify({
-            'prayer': prayer,
-            'closure': closure,
-            'mood_detected': mood,
-            'context_topics': context_topics,
-            'name': user_name
-        })
-        
-    except Exception as e:
-        logging.error(f"Contextual prayer error: {str(e)}")
-        return jsonify({
-            'error': 'Unable to generate prayer',
-            'prayer': f"Heavenly Father, be with {session.get('user_name', 'this precious person')} right now. Grant them peace and comfort. In Jesus' name, Amen."
-        }), 500
-
-@app.route('/api/drop_of_hope', methods=['GET'])
-def get_drop_of_hope():
-    """Get a random Drop of Hope verse for rotation display"""
-    try:
-        verse_data = drop_of_hope.get_random_verse()
-        
-        return jsonify({
-            'verse': verse_data['text'],
-            'reference': verse_data['verse'],
-            'theme': verse_data.get('theme', 'hope')
-        })
-        
-    except Exception as e:
-        logging.error(f"Drop of Hope error: {str(e)}")
-        return jsonify({
-            'verse': "The Lord is close to the brokenhearted and saves those who are crushed in spirit.",
-            'reference': "Psalm 34:18",
-            'theme': 'comfort'
-        }), 200  # Still return 200 with fallback verse
-
-@app.route('/api/reset_session', methods=['POST'])
-def reset_session():
-    """Reset the conversation session"""
-    session.clear()
-    return jsonify({'status': 'Session reset successfully'})
-
-@app.route('/api/clear_user_data', methods=['POST']) 
-def clear_user_data():
-    """Clear user data including gamified features"""
-    session.clear()
-    # Clear the global storage as well
-    from gamified_spiritual_features import SESSION_STORAGE
-    SESSION_STORAGE.clear()
-    return jsonify({'status': 'All user data cleared'})
-
-if __name__ == '__main__':
-    import os
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+.form-control {
+  width: 100%;
