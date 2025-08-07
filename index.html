@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GABE - Guidance and Blessing Everyday</title>
+    <meta name="description" content="Because even prayers start with a conversation. Chat with GABE for encouragement, prayer, and biblical wisdom.">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="GABE">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/static/icons/icon-512.png">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/">
+    <meta property="og:title" content="GABE - Guidance and Blessing Everyday">
+    <meta property="og:description" content="Because even prayers start with a conversation">
+    <meta property="og:image" content="/static/icons/icon-512.png">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- External Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/standalone-features.css">
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-container" class="welcome-container">
+        <div class="welcome-card">
+            <div class="angel-figure" onclick="window.gabeApp && window.gabeApp.playAngelSound()" style="cursor: pointer;" title="Click me for a blessing">
+                <div class="angel-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="180" height="200" viewBox="0 0 140 160" fill="none">
+                        <!-- Background glow -->
+                        <defs>
+                            <radialGradient id="angelGlow" cx="50%" cy="30%" r="70%">
+                                <stop offset="0%" style="stop-color:#fff;stop-opacity:0.4"/>
+                                <stop offset="70%" style="stop-color:#87CEEB;stop-opacity:0.2"/>
+                                <stop offset="100%" style="stop-color:transparent;stop-opacity:0"/>
+                            </radialGradient>
+                            <linearGradient id="wingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#f0f8ff;stop-opacity:0.9"/>
+                                <stop offset="100%" style="stop-color:#e6f3ff;stop-opacity:0.7"/>
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Background glow circle -->
+                        <circle cx="70" cy="80" r="60" fill="url(#angelGlow)"/>
+                        
+                        <!-- Left Wing -->
+                        <path d="M45 85 Q25 65 15 70 Q10 75 15 85 Q25 95 45 90 Q50 87 45 85 Z" fill="url(#wingGradient)" stroke="#d6ebf5" stroke-width="0.5"/>
+                        <path d="M40 80 Q22 72 18 75 Q20 82 35 85" fill="none" stroke="#b8daf0" stroke-width="0.3"/>
+                        
+                        <!-- Right Wing -->
+                        <path d="M95 85 Q115 65 125 70 Q130 75 125 85 Q115 95 95 90 Q90 87 95 85 Z" fill="url(#wingGradient)" stroke="#d6ebf5" stroke-width="0.5"/>
+                        <path d="M100 80 Q118 72 122 75 Q120 82 105 85" fill="none" stroke="#b8daf0" stroke-width="0.3"/>
+                        
+                        <!-- Halo with glow animation -->
+                        <ellipse cx="70" cy="40" rx="15" ry="5" fill="none" stroke="#FFD700" stroke-width="2.5" opacity="0.8">
+                            <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+                        </ellipse>
+                        <ellipse cx="70" cy="40" rx="12" ry="3" fill="rgba(255,215,0,0.3)">
+                            <animate attributeName="opacity" values="0.3;0.5;0.3" dur="2s" repeatCount="indefinite"/>
+                        </ellipse>
+                        
+                        <!-- Angel Figure -->
+                        <!-- Head -->
+                        <circle cx="70" cy="65" r="18" fill="#f5d5ae" stroke="#e8c4a0" stroke-width="0.5"/>
+                        
+                        <!-- Hair -->
+                        <path d="M52 55 Q60 45 70 50 Q80 45 88 55 Q85 65 80 70 Q70 75 60 70 Q55 65 52 55" fill="#d4a574" opacity="0.8"/>
+                        
+                        <!-- Eyes (closed/peaceful) -->
+                        <path d="M62 62 Q65 60 68 62" stroke="#8b6f47" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                        <path d="M72 62 Q75 60 78 62" stroke="#8b6f47" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                        
+                        <!-- Nose -->
+                        <circle cx="70" cy="67" r="0.5" fill="#e8c4a0"/>
+                        
+                        <!-- Mouth (gentle smile) -->
+                        <path d="M67 72 Q70 74 73 72" stroke="#cd9a7a" stroke-width="1" fill="none" stroke-linecap="round"/>
+                        
+                        <!-- Body/Robes -->
+                        <path d="M70 83 Q55 85 50 100 Q52 120 60 130 Q70 135 80 130 Q88 120 90 100 Q85 85 70 83" fill="#f0f8ff" stroke="#e1ecf4" stroke-width="0.5"/>
+                        <path d="M70 83 Q60 85 58 95 Q65 110 70 115 Q75 110 82 95 Q80 85 70 83" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <!-- Divine light rays with shimmer -->
+                        <g opacity="0.4">
+                            <line x1="70" y1="25" x2="70" y2="35" stroke="#FFD700" stroke-width="1">
+                                <animate attributeName="opacity" values="0.4;0.8;0.4" dur="3s" repeatCount="indefinite"/>
+                            </line>
+                            <line x1="75" y1="28" x2="73" y2="36" stroke="#FFD700" stroke-width="0.8">
+                                <animate attributeName="opacity" values="0.4;0.8;0.4" dur="3s" begin="0.5s" repeatCount="indefinite"/>
+                            </line>
+                            <line x1="65" y1="28" x2="67" y2="36" stroke="#FFD700" stroke-width="0.8">
+                                <animate attributeName="opacity" values="0.4;0.8;0.4" dur="3s" begin="1s" repeatCount="indefinite"/>
+                            </line>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+            
+            <h1 class="welcome-title">GABE</h1>
+            <h2 class="welcome-subtitle">GUIDANCE AND BLESSING EVERYDAY</h2>
+            <p class="welcome-tagline">Because even prayers start with a conversation</p>
+            
+            <button id="start-chat-btn" class="start-chat-btn">
+                Start Chat
+            </button>
+            <div class="audio-notice">
+                <small>🎵 Click the angel above for a heavenly blessing</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Interface -->
+    <div id="chat-container" class="chat-container">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <div class="chat-header-left">
+                <div class="chat-avatar">
+                    <i data-feather="message-circle"></i>
+                </div>
+                <div class="header-content">
+                    <h2 class="chat-title">GABE <span class="chat-subtitle-inline">Because even prayers start with a conversation</span></h2>
+                </div>
+            </div>
+            
+
+            
+            <div class="chat-actions">
+                <div class="voice-toggle-container">
+                    <label class="voice-toggle-label">
+                        <input type="checkbox" id="voice-toggle" checked>
+                        <span class="voice-toggle-slider"></span>
+                        <span class="voice-toggle-text">Voice</span>
+                    </label>
+                </div>
+                <!-- Music toggle removed with background music system -->
+                <button class="action-btn faith-action-btn" id="spiritual-features-btn" title="Faith in Action" onclick="toggleSpiritualFeaturesPanel()">
+                    <span class="star-icon">⭐</span>
+                </button>
+                <button class="action-btn" id="reset-btn" title="New Conversation">
+                    <i data-feather="refresh-cw"></i>
+                </button>
+                {% if user %}
+                <a href="{{ url_for('logout') }}" class="action-btn logout-btn" title="Sign out {{ user.name }}" style="text-decoration: none; color: inherit; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
+                    <i data-feather="log-out"></i>
+                    <span style="margin-left: 5px; font-size: 12px;">Logout</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Faith in Action Features Panel -->
+        <div class="spiritual-features" id="spiritual-features" style="display: none;">
+            <div class="features-header">
+                <h4>🌟 Faith in Action</h4>
+                <div class="progress-indicator">
+                    <div class="level-display">
+                        <span class="level-label">Level:</span>
+                        <span class="level-value" id="inline-level">Seed</span>
+                    </div>
+                    <div class="xp-display">
+                        <span class="xp-label">XP:</span>
+                        <span class="xp-value" id="inline-xp">0</span>
+                    </div>
+                    <div class="compact-icons">
+                        <button onclick="window.gameFeatures && window.gameFeatures.openBadges()" class="compact-icon-btn" title="View Badges">
+                            🏆
+                        </button>
+                        <button onclick="window.gameFeatures && window.gameFeatures.showRecentRewards()" class="compact-icon-btn" title="Recent Rewards">
+                            🎁
+                        </button>
+                    </div>
+                </div>
+                <div class="header-buttons">
+                    <button class="help-btn" onclick="showFaithInActionHelp()" title="How it works">
+                        <i data-feather="help-circle"></i>
+                    </button>
+                    <button class="close-features-btn" onclick="window.gabeApp && window.gabeApp.toggleSpiritualFeatures()">×</button>
+                </div>
+            </div>
+            <div class="features-grid">
+                <button onclick="window.gameFeatures && window.gameFeatures.openDevotion()" class="spiritual-feature-btn devotion-btn">
+                    <div class="feature-icon">🌅</div>
+                    <span id="devotion-button-text">Morning Devotion</span>
+                    <small>Streak: <span id="devotion-streak">0</span></small>
+                </button>
+                <button onclick="window.gameFeatures && window.gameFeatures.openPrayerManager()" class="spiritual-feature-btn prayer-btn">
+                    <div class="feature-icon">🙏</div>
+                    <span>Prayer Manager</span>
+                    <small>Active: <span id="prayer-count">0</span> prayers</small>
+                </button>
+                <button onclick="window.gameFeatures && window.gameFeatures.openBibleReading()" class="spiritual-feature-btn verse-btn">
+                    <div class="feature-icon">📖</div>
+                    <span>Bible Reading</span>
+                    <small>Plan: <span id="reading-progress">0</span>% complete</small>
+                </button>
+                <button onclick="window.gameFeatures && window.gameFeatures.openBibleStudy()" class="spiritual-feature-btn journey-btn">
+                    <div class="feature-icon">📖</div>
+                    <span>Bible Study</span>
+                    <small>Completed: <span id="studies-completed">0</span>/3</small>
+                </button>
+                <button onclick="window.gameFeatures && window.gameFeatures.openMoodMission()" class="spiritual-feature-btn mood-btn">
+                    <div class="feature-icon">😊</div>
+                    <span>Mood Mission</span>
+                    <small>Completed: <span id="mood-missions">0</span></small>
+                </button>
+
+            </div>
+        </div>
+        
+        <!-- Faith in Action Help Modal -->
+        <div class="faith-help-modal" id="faith-help-modal" style="display: none;">
+            <div class="faith-help-content">
+                <div class="faith-help-header">
+                    <h3>🌟 How Faith in Action Works</h3>
+                    <button class="close-help-btn" onclick="closeFaithInActionHelp()">×</button>
+                </div>
+                <div class="faith-help-body">
+                    <div class="help-section">
+                        <h4>📈 XP & Levels</h4>
+                        <p>Complete spiritual activities to earn Experience Points (XP) and level up your faith journey:</p>
+                        <ul>
+                            <li><strong>Seed</strong> → <strong>Shepherd</strong> → <strong>Disciple</strong> → <strong>Apostle</strong> → <strong>Saint</strong></li>
+                            <li>Each activity gives different XP amounts</li>
+                            <li>Higher levels unlock new content and badges</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h4>🏆 Activities & Rewards</h4>
+                        <ul>
+                            <li><strong>Daily Devotion (2 XP):</strong> Read scripture and reflect daily</li>
+                            <li><strong>Prayer Challenge (2 XP):</strong> Complete guided prayer prompts</li>
+                            <li><strong>Verse Mastery (1 XP):</strong> Learn and memorize Bible verses</li>
+                            <li><strong>Bible Study (3 XP):</strong> Interactive guided Bible study courses</li>
+                            <li><strong>Mood Mission (1 XP):</strong> Faith-based emotional wellness tasks</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h4>🎖️ Badges & Streaks</h4>
+                        <p>Earn special badges for:</p>
+                        <ul>
+                            <li><strong>Faith Seed:</strong> Complete your first activity</li>
+                            <li><strong>Devotion Keeper:</strong> 3-day devotion streak</li>
+                            <li><strong>Prayer Warrior:</strong> Complete 5 prayer challenges</li>
+                            <li><strong>Verse Sage:</strong> Master 10 Bible verses</li>
+                            <li><strong>Level badges:</strong> Automatic when you level up</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h4>🔄 Daily Reset</h4>
+                        <p>Activities reset daily at midnight, so you can:</p>
+                        <ul>
+                            <li>Build consistent spiritual habits</li>
+                            <li>Maintain prayer and devotion streaks</li>
+                            <li>Earn XP every day through regular practice</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="faith-help-footer">
+                    <button class="primary-btn" onclick="closeFaithInActionHelp()">Got it! Let's grow together 🙏</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Messages -->
+        <div id="chat-messages" class="chat-messages">
+            <!-- Messages will be added here dynamically -->
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-container">
+            <form id="chat-form" class="chat-input-form">
+                <textarea 
+                    id="chat-input" 
+                    class="chat-input" 
+                    placeholder="Share what's on your heart..."
+                    rows="1"
+                    maxlength="1000"
+                ></textarea>
+                
+                <!-- Contextual Support Buttons (appears after 2 conversations) -->
+                <div id="contextual-support-bar" class="contextual-support-bar" style="display: none;">
+                    <button type="button" class="context-btn prayer-btn" onclick="window.contextualSupport.showInlineContent('prayer', 'general')" title="Prayer">
+                        <span class="btn-letter">P</span>
+                    </button>
+                    <button type="button" class="context-btn story-btn" onclick="window.contextualSupport.showInlineContent('story', 'general')" title="Bible Story">
+                        <span class="btn-letter">S</span>
+                    </button>
+                    <button type="button" class="context-btn analogy-btn" onclick="window.contextualSupport.showInlineContent('analogy', 'general')" title="Spiritual Analogy">
+                        <span class="btn-letter">A</span>
+                    </button>
+                </div>
+                
+                <button type="button" class="voice-btn" id="voice-btn" title="Voice Input">
+                    <i data-feather="mic" id="mic-icon"></i>
+                </button>
+                <button type="submit" class="send-btn" id="send-btn">
+                    <i data-feather="send"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login/Registration Modal -->
+    <div id="auth-modal" class="auth-modal" style="display: none;">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <div class="gabe-avatar-small">G</div>
+                <h3 id="auth-modal-title">Welcome to GABE</h3>
+                <button class="auth-modal-close" onclick="closeAuthModal()">&times;</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form">
+                <div class="auth-form-header">
+                    <h4>Sign In</h4>
+                    <p>Continue your spiritual journey</p>
+                </div>
+                
+                <form id="login-form-element">
+                    <div class="form-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+                    <button type="submit" class="auth-btn primary">Sign In</button>
+                </form>
+                
+                <div class="auth-switch">
+                    Don't have an account? 
+                    <a href="#" onclick="showRegisterForm()">Create one here</a>
+                </div>
+            </div>
+            
+            <!-- Registration Form -->
+            <div id="register-form" class="auth-form" style="display: none;">
+                <div class="auth-form-header">
+                    <h4>Join GABE</h4>
+                    <p>Start your spiritual journey today</p>
+                </div>
+                
+                <form id="register-form-element">
+                    <div class="form-group">
+                        <label for="register-name">Your Name</label>
+                        <input type="text" id="register-name" name="name" required 
+                               placeholder="What should GABE call you?">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-username">Choose Username</label>
+                        <input type="text" id="register-username" name="username" required 
+                               placeholder="Your unique username">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" name="password" required 
+                               placeholder="At least 6 characters" minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label>Age Range</label>
+                        <div class="age-buttons-modal">
+                            <button type="button" class="age-btn-modal" data-age="10-17">10-17</button>
+                            <button type="button" class="age-btn-modal" data-age="18-30">18-30</button>
+                            <button type="button" class="age-btn-modal" data-age="31-50">31-50</button>
+                            <button type="button" class="age-btn-modal" data-age="51+">51+</button>
+                        </div>
+                        <input type="hidden" id="register-age-range" name="age_range" required>
+                    </div>
+                    <button type="submit" class="auth-btn primary">Create Account</button>
+                </form>
+                
+                <div class="auth-switch">
+                    Already have an account? 
+                    <a href="#" onclick="showLoginForm()">Sign in here</a>
+                </div>
+            </div>
+            
+            <div id="auth-error" class="auth-error" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Install Prompt -->
+    <div id="install-prompt" class="install-prompt">
+        <div>
+            <strong>Install GABE</strong><br>
+            <small>Get the full app experience on your device</small>
+        </div>
+        <div>
+            <button id="install-btn" class="install-btn">Install</button>
+            <button id="dismiss-install" class="install-btn" style="background: transparent;">Later</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
+    <!-- Audio manager and tone generator removed - background music system disabled -->
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/spiritual-features.js"></script>
+
+    <script src="/static/js/contextual-support.js"></script>
+    <script src="/static/js/modal-test.js"></script>
+    
+    <style>
+    /* Auth Modal Styles */
+    .auth-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+    }
+    
+    .auth-modal-content {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 400px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    
+    .auth-modal-header {
+        text-align: center;
+        margin-bottom: 25px;
+        position: relative;
+    }
+    
+    .gabe-avatar-small {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #8b5dff, #9d71ff);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+        box-shadow: 0 8px 20px rgba(139, 93, 255, 0.3);
+    }
+    
+    .auth-modal-close {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+    }
+    
+    .auth-form-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    
+    .auth-form-header h4 {
+        margin: 0 0 5px 0;
+        color: #2d2d2d;
+        font-size: 22px;
+        font-weight: 700;
+    }
+    
+    .auth-form-header p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2d2d2d;
+        font-size: 14px;
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid rgba(139, 93, 255, 0.1);
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    
+    .form-group input:focus {
+        outline: none;
+        border-color: #8b5dff;
+        box-shadow: 0 0 0 3px rgba(139, 93, 255, 0.1);
+    }
+    
+    .age-buttons-modal {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 8px;
+    }
+    
+    .age-btn-modal {
+        padding: 10px;
+        border: 2px solid rgba(139, 93, 255, 0.2);
+        background: rgba(139, 93, 255, 0.05);
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #8b5dff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .age-btn-modal:hover {
+        background: rgba(139, 93, 255, 0.1);
+        border-color: rgba(139, 93, 255, 0.4);
+    }
+    
+    .age-btn-modal.selected {
+        background: #8b5dff;
+        color: white;
+        border-color: #8b5dff;
+    }
+    
+    .auth-btn {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .auth-btn.primary {
+        background: linear-gradient(135deg, #8b5dff, #9d71ff);
+        color: white;
+    }
+    
+    .auth-btn.primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(139, 93, 255, 0.4);
+    }
+    
+    .auth-switch {
+        text-align: center;
+        margin-top: 20px;
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .auth-switch a {
+        color: #8b5dff;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    .auth-switch a:hover {
+        text-decoration: underline;
+    }
+    
+    .auth-error {
+        background: #ffe6e6;
+        color: #d63384;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 15px;
+        font-size: 14px;
+        text-align: center;
+    }
+    </style>
+
+    <script>
+    // User authentication data
+    window.authenticatedUser = {% if user %}{{ {'name': user.name, 'age_range': user.age_range, 'username': user.username} | tojson }}{% else %}null{% endif %};
+    
+    // Global function to toggle spiritual features panel
+    function toggleSpiritualFeaturesPanel() {
+        console.log('toggleSpiritualFeaturesPanel called');
+        const featuresPanel = document.getElementById('spiritual-features');
+        console.log('Features panel element:', featuresPanel);
+        
+        if (featuresPanel) {
+            const isVisible = featuresPanel.style.display !== 'none';
+            console.log('Panel is currently visible:', isVisible);
+            featuresPanel.style.display = isVisible ? 'none' : 'block';
+            console.log('Panel display now set to:', featuresPanel.style.display);
+            
+            // Load progress when opening the panel
+            if (!isVisible && window.gameFeatures) {
+                console.log('Loading progress when opening spiritual features panel');
+                window.gameFeatures.loadUserProgress();
+            }
+        } else {
+            console.log('Features panel element not found!');
+        }
+    }
+    
+    // Faith in Action Help Modal Functions
+    function showFaithInActionHelp() {
+        const modal = document.getElementById('faith-help-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            // Re-initialize feather icons for the modal
+            setTimeout(() => {
+                if (window.feather) {
+                    feather.replace();
+                }
+            }, 50);
+        }
+    }
+    
+    function closeFaithInActionHelp() {
+        const modal = document.getElementById('faith-help-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+    // Close modal when clicking outside
+    document.addEventListener('click', function(event) {
+        const modal = document.getElementById('faith-help-modal');
+        if (modal && event.target === modal) {
+            closeFaithInActionHelp();
+        }
+    });
+    
+    // Update devotion button text based on time of day
+    function updateDevotionButtonTime() {
+        const currentHour = new Date().getHours();
+        const isMorning = currentHour >= 5 && currentHour < 14;
+        
+        const devotionButtonText = document.getElementById('devotion-button-text');
+        const devotionIcon = document.querySelector('.devotion-btn .feature-icon');
+        
+        if (devotionButtonText) {
+            devotionButtonText.textContent = isMorning ? 'Morning Devotion' : 'Evening Devotion';
+        }
+        
+        if (devotionIcon) {
+            devotionIcon.textContent = isMorning ? '🌅' : '🌙';
+        }
+    }
+    
+    // Update on page load and periodically
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(updateDevotionButtonTime, 500);
+        // Update every hour in case page stays open across time boundaries
+        setInterval(updateDevotionButtonTime, 3600000);
+    });
+    
+    // Auth Modal Functions
+    function showAuthModal() {
+        if (window.authenticatedUser) {
+            // User is already authenticated, start chat directly
+            if (window.gabeApp) {
+                window.gabeApp.userName = window.authenticatedUser.name;
+                window.gabeApp.userAgeRange = window.authenticatedUser.age_range;
+                window.gabeApp.userState.name = window.authenticatedUser.name;
+                window.gabeApp.userState.ageGroup = window.authenticatedUser.age_range;
+                window.gabeApp.userState.conversationStage = "chat";
+                window.gabeApp.showChat();
+            }
+        } else {
+            // Show login modal
+            document.getElementById('auth-modal').style.display = 'flex';
+            showLoginForm();
+        }
+    }
+    
+    function closeAuthModal() {
+        document.getElementById('auth-modal').style.display = 'none';
+        clearAuthError();
+    }
+    
+    function showLoginForm() {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('register-form').style.display = 'none';
+        document.getElementById('auth-modal-title').textContent = 'Welcome Back';
+        clearAuthError();
+    }
+    
+    function showRegisterForm() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('register-form').style.display = 'block';
+        document.getElementById('auth-modal-title').textContent = 'Join GABE';
+        clearAuthError();
+    }
+    
+    function clearAuthError() {
+        const errorDiv = document.getElementById('auth-error');
+        errorDiv.style.display = 'none';
+        errorDiv.textContent = '';
+    }
+    
+    function showAuthError(message) {
+        const errorDiv = document.getElementById('auth-error');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+    }
+    
+    // Age selection for registration
+    document.addEventListener('DOMContentLoaded', function() {
+        // Age button selection
+        document.querySelectorAll('.age-btn-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.age-btn-modal').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('register-age-range').value = this.dataset.age;
+            });
+        });
+        
+        // Login form submission
+        document.getElementById('login-form-element').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: formData.get('username'),
+                        password: formData.get('password')
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    window.location.reload(); // Reload to get authenticated state
+                } else {
+                    showAuthError(result.message || 'Login failed. Please try again.');
+                }
+            } catch (error) {
+                showAuthError('Login failed. Please try again.');
+            }
+        });
+        
+        // Registration form submission
+        document.getElementById('register-form-element').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const ageRange = document.getElementById('register-age-range').value;
+            
+            if (!ageRange) {
+                showAuthError('Please select your age range');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: formData.get('name'),
+                        username: formData.get('username'),
+                        password: formData.get('password'),
+                        age_range: ageRange
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    window.location.reload(); // Reload to get authenticated state
+                } else {
+                    showAuthError(result.message || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                showAuthError('Registration failed. Please try again.');
+            }
+        });
+        
+        // Update start chat button to show auth modal
+        const startChatBtn = document.getElementById('start-chat-btn');
+        if (startChatBtn) {
+            startChatBtn.onclick = function(e) {
+                e.preventDefault();
+                showAuthModal();
+            };
+        }
+    });
+    </script>
+    
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/contextual-support.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/gamified-spiritual-features.js') }}"></script>
+    
+    <!-- Music test removed -->
+
+    <!-- Structured Data for Search Engines -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "GABE - Guidance and Blessing Everyday",
+        "description": "Because even prayers start with a conversation",
+        "url": "/",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "GABE Spiritual Companion"
+        }
+    }
+    </script>
+</body>
+</html>
