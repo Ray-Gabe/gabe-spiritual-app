@@ -61,15 +61,184 @@ gamified_features = GamifiedSpiritualFeatures()
 
 @app.route('/')
 def index():
-    """Main GABE landing page - always shows the same interface"""
+    """Main GABE landing page - embedded HTML version"""
     user_data = current_user if current_user.is_authenticated else None
-    return render_template('index.html', user=user_data)
+    user_name = user_data.name if user_data else "Guest"
+    
+    return f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GABE - Your Spiritual Companion</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }}
+        .chat-container {{ background: rgba(255,255,255,0.95); border-radius: 15px; backdrop-filter: blur(10px); }}
+        .chat-box {{ height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; background: white; }}
+    </style>
+</head>
+<body>
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="chat-container p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2>🙏 GABE - Your Spiritual Companion</h2>
+                        <div>
+                            {'<span class="badge bg-success">Logged in as ' + user_name + '</span> <a href="/logout" class="btn btn-sm btn-outline-danger">Logout</a>' if user_data else '<a href="/login" class="btn btn-primary me-2">Login</a><a href="/register" class="btn btn-outline-primary">Register</a>'}
+                        </div>
+                    </div>
+                    
+                    <div class="chat-box mb-3" id="chatBox">
+                        <div class="mb-2">
+                            <strong>GABE:</strong> Hello {user_name}! I'm GABE, your spiritual companion. I'm here to offer guidance, prayers, and support on your spiritual journey. How can I help you today? 🙏
+                        </div>
+                    </div>
+                    
+                    {'<div><input type="text" class="form-control mb-2" id="messageInput" placeholder="Share what\'s on your heart..."><button class="btn btn-primary" onclick="sendMessage()">Send Message</button></div>' if user_data else '<div class="text-center p-3"><p>Please login to start your conversation with GABE</p></div>'}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function sendMessage() {{
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += '<div class="mb-2"><strong>You:</strong> ' + message + '</div>';
+            input.value = '';
+            
+            // Send to backend
+            fetch('/api/chat', {{
+                method: 'POST',
+                headers: {{'Content-Type': 'application/json'}},
+                body: JSON.stringify({{'message': message}})
+            }})
+            .then(response => response.json())
+            .then(data => {{
+                chatBox.innerHTML += '<div class="mb-2"><strong>GABE:</strong> ' + data.response + '</div>';
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }})
+            .catch(error => {{
+                chatBox.innerHTML += '<div class="mb-2 text-danger"><strong>GABE:</strong> I\'m having trouble right now, but I\'m still here with you. 💙</div>';
+            }});
+        }}
+        
+        // Enter key support
+        document.getElementById('messageInput')?.addEventListener('keypress', function(e) {{
+            if (e.key === 'Enter') sendMessage();
+        }});
+    </script>
+</body>
+</html>
+    """
 
 @app.route('/chat')
 @login_required
 def chat_interface():
-    """Chat interface for authenticated users"""
-    return render_template('index.html', user=current_user)
+    """Chat interface for authenticated users - embedded HTML"""
+    return f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GABE Chat - Your Spiritual Companion</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }}
+        .chat-container {{ background: rgba(255,255,255,0.95); border-radius: 15px; backdrop-filter: blur(10px); }}
+        .chat-box {{ height: 500px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; background: white; border-radius: 8px; }}
+        .message {{ margin-bottom: 10px; padding: 8px; border-radius: 8px; }}
+        .user-message {{ background: #e3f2fd; text-align: right; }}
+        .gabe-message {{ background: #f3e5f5; }}
+    </style>
+</head>
+<body>
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="chat-container p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2>🙏 GABE Chat</h2>
+                        <div>
+                            <span class="badge bg-success me-2">Welcome, {current_user.name}!</span>
+                            <a href="/logout" class="btn btn-sm btn-outline-danger">Logout</a>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-box mb-3" id="chatBox">
+                        <div class="gabe-message message">
+                            <strong>GABE:</strong> Welcome back, {current_user.name}! I'm so glad you're here. I'm ready to listen, offer guidance, and walk alongside you on your spiritual journey. What's on your heart today? 🙏✨
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="messageInput" placeholder="Share what's on your heart..." onkeypress="handleKeyPress(event)">
+                        <button class="btn btn-primary" onclick="sendMessage()" id="sendBtn">Send Message</button>
+                    </div>
+                    
+                    <div class="mt-2 text-center">
+                        <small class="text-muted">Press Enter to send • GABE is here to listen and support you</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function sendMessage() {{
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const chatBox = document.getElementById('chatBox');
+            const sendBtn = document.getElementById('sendBtn');
+            
+            // Add user message
+            chatBox.innerHTML += '<div class="user-message message"><strong>You:</strong> ' + message + '</div>';
+            input.value = '';
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+            
+            // Send to backend
+            fetch('/api/chat', {{
+                method: 'POST',
+                headers: {{'Content-Type': 'application/json'}},
+                body: JSON.stringify({{'message': message}})
+            }})
+            .then(response => response.json())
+            .then(data => {{
+                chatBox.innerHTML += '<div class="gabe-message message"><strong>GABE:</strong> ' + data.response + '</div>';
+                chatBox.scrollTop = chatBox.scrollHeight;
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send Message';
+                input.focus();
+            }})
+            .catch(error => {{
+                chatBox.innerHTML += '<div class="gabe-message message text-danger"><strong>GABE:</strong> I\'m having a moment of technical difficulty, but I\'m still here with you in spirit. Please try again in just a moment. 💙</div>';
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send Message';
+            }});
+        }}
+        
+        function handleKeyPress(event) {{
+            if (event.key === 'Enter') {{
+                sendMessage();
+            }}
+        }}
+        
+        // Focus on input when page loads
+        document.getElementById('messageInput').focus();
+    </script>
+</body>
+</html>
+    """
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -85,8 +254,8 @@ def login():
         if not username or not password:
             if request.is_json:
                 return jsonify({'success': False, 'message': 'Username and password are required'}), 400
-            flash('Username and password are required')
-            return render_template('login.html')
+            # Replace this line: return render_template('login.html')
+            return redirect(url_for('login'))  # Just redirect back to login
         
         user = User.query.filter_by(username=username).first()
         
@@ -100,9 +269,53 @@ def login():
         else:
             if request.is_json:
                 return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
-            flash('Invalid username or password')
+            # Replace this line: return render_template('login.html')
+            return redirect(url_for('login'))  # Just redirect back to login
     
-    return render_template('login.html')
+    # Add embedded HTML for GET requests
+    return """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GABE Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .login-container { background: rgba(255,255,255,0.95); border-radius: 15px; backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="login-container p-4">
+                    <h2 class="text-center mb-4">🙏 Login to GABE</h2>
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="/register">Don't have an account? Register here</a>
+                    </div>
+                    <div class="text-center mt-2">
+                        <a href="/">← Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+    """
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -121,22 +334,19 @@ def register():
         if not all([username, password, name, age_range]):
             if request.is_json:
                 return jsonify({'success': False, 'message': 'All fields are required'}), 400
-            flash('All fields are required')
-            return render_template('register.html')
+            return redirect(url_for('register'))
         
         if len(password) < 6:
             if request.is_json:
                 return jsonify({'success': False, 'message': 'Password must be at least 6 characters'}), 400
-            flash('Password must be at least 6 characters')
-            return render_template('register.html')
+            return redirect(url_for('register'))
         
         # Check if username already exists
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             if request.is_json:
                 return jsonify({'success': False, 'message': 'Username already exists'}), 400
-            flash('Username already exists')
-            return render_template('register.html')
+            return redirect(url_for('register'))
         
         # Create new user
         new_user = User(
@@ -163,9 +373,68 @@ def register():
             logging.error(f"Registration error: {e}")
             if request.is_json:
                 return jsonify({'success': False, 'message': 'Registration failed. Please try again.'}), 500
-            flash('Registration failed. Please try again.')
+            return redirect(url_for('register'))
     
-    return render_template('register.html')
+    # Add embedded HTML for GET requests
+    return """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GABE Register</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .register-container { background: rgba(255,255,255,0.95); border-radius: 15px; backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="register-container p-4">
+                    <h2 class="text-center mb-4">🙏 Join GABE</h2>
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Age Range</label>
+                            <select name="age_range" class="form-control" required>
+                                <option value="">Select Age Range</option>
+                                <option value="13-17">13-17</option>
+                                <option value="18-25">18-25</option>
+                                <option value="26-35">26-35</option>
+                                <option value="36-50">36-50</option>
+                                <option value="51+">51+</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="/login">Already have an account? Login here</a>
+                    </div>
+                    <div class="text-center mt-2">
+                        <a href="/">← Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+    """
+
 
 @app.route('/logout')
 @login_required
