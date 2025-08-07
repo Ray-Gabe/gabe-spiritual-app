@@ -6,7 +6,7 @@ def create_models(db):
     """Create model classes with database reference"""
     
     class User(UserMixin, db.Model):
-        __tablename__ = 'users'
+        __tablename__ = 'conversations'
         
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String(80), unique=True, nullable=False)
