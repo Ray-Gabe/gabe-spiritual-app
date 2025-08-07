@@ -6,7 +6,7 @@ def create_models(db):
     """Create model classes with database reference"""
     
     class User(UserMixin, db.Model):
-        __tablename__ = 'conversations'
+        __tablename__ = 'users'
         
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String(80), unique=True, nullable=False)
@@ -31,7 +31,7 @@ def create_models(db):
             """Update the last login timestamp"""
             self.last_login = datetime.utcnow()
             db.session.commit()
-
+    
     class Conversation(db.Model):
         __tablename__ = 'conversations'
         
