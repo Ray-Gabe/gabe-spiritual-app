@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GABE Register</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="register-container">
+    <h2>🙏 Join GABE</h2>
+    <form method="POST">
+      <label class="form-label">Name</label>
+      <input type="text" name="name" class="form-control" required>
+
+      <label class="form-label">Username</label>
+      <input type="text" name="username" class="form-control" required>
+
+      <label class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" required>
+
+      <label class="form-label">Age Range</label>
+      <select name="age_range" class="form-control" required>
+        <option value="">Select Age Range</option>
+        <option value="13-17">13-17</option>
+        <option value="18-25">18-25</option>
+        <option value="26-35">26-35</option>
+        <option value="36-50">36-50</option>
+        <option value="51+">51+</option>
+      </select>
+
+      <button type="submit" class="btn-primary">Register</button>
+    </form>
+    <div class="text-center mt-3">
+      <a href="/login">Already have an account? Login</a>
+    </div>
+    <div class="text-center mt-2">
+      <a href="/">← Back to Home</a>
+    </div>
+  </div>
+</body>
+</html>
