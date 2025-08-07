@@ -1,7 +1,13 @@
-from gabe_app import create_app
+from flask import Flask
+from gabe_app.routes.auth_routes import auth_bp
+from gabe_app.routes.main_routes import main_bp
 
-app = create_app()
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))
-    app.run(host='0.0.0.0', port=port)
+# Register routes
+app.register_blueprint(auth_bp)
+app.register_blueprint(main_bp)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
