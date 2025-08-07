@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GABE Chat</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="chat-container p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>🙏 GABE Chat</h2>
+      <div>
+        <span class="badge bg-success me-2">Welcome, {{ name }}!</span>
+        <a href="/logout" class="btn-sm btn-outline-danger">Logout</a>
+      </div>
+    </div>
+
+    <div class="chat-box mb-3" id="chatBox">
+      <div class="gabe-message message">
+        <strong>GABE:</strong> Welcome back, {{ name }}! I'm here for you. What’s on your heart today? 🙏✨
+      </div>
+    </div>
+
+    <div class="input-group">
+      <input type="text" class="form-control" id="messageInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+      <button class="btn-primary" onclick="sendMessage()" id="sendBtn">Send</button>
+    </div>
+
+    <div class="mt-2 text-center">
+      <small class="text-muted">Press Enter to send • GABE is here to support you spiritually</small>
+    </div>
+  </div>
+
+  <script>
+    function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const message = input.value.trim();
+      if (!message) return;
+
+      const chatBox = document.getElementById('chatBox');
+      const sendBtn = document.getElementById('sendBtn');
+
+      chatBox.innerHTML += `<div class="user-message message"><strong>You:</strong> ${message}</div>`;
+      input.value = '';
+      sendBtn.disabled = true;
+      sendBtn.textContent = 'Sending...';
+
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message})
+      })
+      .then(res => res.json())
+      .then(data
