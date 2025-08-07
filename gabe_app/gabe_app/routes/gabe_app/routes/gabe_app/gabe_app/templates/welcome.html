@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GABE - Your Spiritual Companion</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="welcome-card">
+    <div class="angel-container">
+      <div class="angel-circle">
+        <div class="angel-face">
+          😊
+          <div class="halo"></div>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="welcome-title">GABE</h1>
+    <h2 class="welcome-subtitle">GUIDANCE AND BLESSING EVERYDAY</h2>
+    <p class="welcome-tagline">Because even prayers start with a conversation</p>
+
+    <form class="welcome-form" action="/register" method="POST">
+      <input type="text" name="name" class="form-input" placeholder="Name" required>
+
+      <select name="age_range" class="form-select" required>
+        <option value="">Age</option>
+        <option value="13-17">13-17</option>
+        <option value="18-25">18-25</option>
+        <option value="26-35">26-35</option>
+        <option value="36-50">36-50</option>
+        <option value="51+">51+</option>
+      </select>
+
+      <input type="text" name="username" class="form-input" placeholder="Choose a username" required>
+      <input type="password" name="password" class="form-input" placeholder="Create a password" required>
+
+      <button type="submit" class="continue-btn">Start My Faith Journey</button>
+    </form>
+
+    <a href="/login" class="login-link">Already have an account? Sign in</a>
+  </div>
+</body>
+</html>
