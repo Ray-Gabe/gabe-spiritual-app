@@ -695,7 +695,7 @@ def logout():
     return redirect(url_for('index'))
 
 # [Rest of your API routes remain exactly the same...]
-}}
+
 
 .form-control:focus {{
   outline: none;
