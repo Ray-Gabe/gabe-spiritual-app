@@ -823,4 +823,490 @@ h2 {{
   border-radius: var(--radius-md);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-floating);
+}}
+
+.btn-primary:hover {{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevated);
+  background: var(--gradient-warm);
+}}
+
+.btn-sm {{
+  padding: 6px 12px;
+  font-size: 0.875rem;
+}}
+
+.btn-outline-danger {{
+  background: transparent;
+  color: #dc2626;
+  border: 2px solid #dc2626;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}}
+
+.btn-outline-danger:hover {{
+  background: #dc2626;
+  color: white;
+  transform: translateY(-1px);
+  text-decoration: none;
+}}
+
+.form-control {{
+  border: 2px solid rgba(37, 99, 235, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+}}
+
+.form-control:focus {{
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}}
+
+.input-group {{
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}}
+
+.input-group .form-control {{
+  flex: 1;
+}}
+
+.badge {{
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+}}
+
+.bg-success {{
+  background: #10b981;
+  color: white;
+}}
+
+.d-flex {{ display: flex; }}
+.justify-content-between {{ justify-content: space-between; }}
+.align-items-center {{ align-items: center; }}
+.mb-3 {{ margin-bottom: 1rem; }}
+.me-2 {{ margin-right: 0.5rem; }}
+.mt-2 {{ margin-top: 0.5rem; }}
+.text-center {{ text-align: center; }}
+.text-muted {{ color: #6b7280; }}
+.p-4 {{ padding: 1.5rem; }}
+
+small {{
+  font-size: 0.875rem;
+}}
+    </style>
+</head>
+<body>
+    <div class="chat-container p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>🙏 GABE Chat</h2>
+            <div>
+                <span class="badge bg-success me-2">Welcome, {current_user.name}!</span>
+                <a href="/logout" class="btn-sm btn-outline-danger">Logout</a>
+            </div>
+        </div>
+        
+        <div class="chat-box mb-3" id="chatBox">
+            <div class="gabe-message message">
+                <strong>GABE:</strong> Welcome back, {current_user.name}! I'm so glad you're here. I'm ready to listen, offer guidance, and walk alongside you on your spiritual journey. What's on your heart today? 🙏✨
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <input type="text" class="form-control" id="messageInput" placeholder="Share what's on your heart..." onkeypress="handleKeyPress(event)">
+            <button class="btn-primary" onclick="sendMessage()" id="sendBtn">Send Message</button>
+        </div>
+        
+        <div class="mt-2 text-center">
+            <small class="text-muted">Press Enter to send • GABE is here to listen and support you</small>
+        </div>
+    </div>
+    
+    <script>
+        function sendMessage() {{
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const chatBox = document.getElementById('chatBox');
+            const sendBtn = document.getElementById('sendBtn');
+            
+            // Add user message
+            chatBox.innerHTML += '<div class="user-message message"><strong>You:</strong> ' + message + '</div>';
+            input.value = '';
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+            
+            // Send to backend
+            fetch('/api/chat', {{
+                method: 'POST',
+                headers: {{'Content-Type': 'application/json'}},
+                body: JSON.stringify({{'message': message}})
+            }})
+            .then(response => response.json())
+            .then(data => {{
+                chatBox.innerHTML += '<div class="gabe-message message"><strong>GABE:</strong> ' + data.response + '</div>';
+                chatBox.scrollTop = chatBox.scrollHeight;
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send Message';
+                input.focus();
+            }})
+            .catch(error => {{
+                chatBox.innerHTML += '<div class="gabe-message message" style="color: #dc2626;"><strong>GABE:</strong> I\'m having a moment of technical difficulty, but I\'m still here with you in spirit. Please try again in just a moment. 💙</div>';
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send Message';
+            }});
+        }}
+        
+        function handleKeyPress(event) {{
+            if (event.key === 'Enter') {{
+                sendMessage();
+            }}
+        }}
+        
+        // Focus on input when page loads
+        document.getElementById('messageInput').focus();
+    </script>
+</body>
+</html>
+    """
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """User login"""
+    if current_user.is_authenticated:
+        return redirect(url_for('chat_interface'))
+    
+    if request.method == 'POST':
+        data = request.get_json() if request.is_json else request.form
+        username = data.get('username', '').strip()
+        password = data.get('password', '').strip()
+        
+        if not username or not password:
+            if request.is_json:
+                return jsonify({'success': False, 'message': 'Username and password are required'}), 400
+            return redirect(url_for('login'))
+        
+        user = User.query.filter_by(username=username).first()
+        
+        if user and user.check_password(password):
+            login_user(user, remember=True)
+            user.update_last_login()
+            
+            if request.is_json:
+                return jsonify({'success': True, 'redirect_url': url_for('chat_interface')})
+            return redirect(url_for('chat_interface'))
+        else:
+            if request.is_json:
+                return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
+            return redirect(url_for('login'))
+    
+    return """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GABE Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+:root {
+  --primary-blue: #2563EB;
+  --gradient-peaceful: linear-gradient(135deg, #DBEAFE 0%, #EBF8FF 100%);
+  --gradient-divine: linear-gradient(135deg, #2563EB 0%, #6366F1 100%);
+  --shadow-elevated: 0 20px 60px rgba(45, 55, 72, 0.12);
+  --radius-xl: 32px;
+  --radius-md: 12px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #DBEAFE 0%, #EBF8FF 20%, #3B82F6 70%, #1E40AF 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease-in-out infinite;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.login-container {
+  background: rgba(255,255,255,0.95);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: var(--shadow-elevated), 0 0 0 1px rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 3rem 2rem;
+  width: 100%;
+  max-width: 400px;
+  transition: all 0.4s ease;
+}
+
+.login-container:hover {
+  transform: translateY(-2px);
+}
+
+h2 {
+  background: var(--gradient-divine);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  border: 2px solid rgba(37, 99, 235, 0.15);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btn-primary {
+  background: var(--gradient-divine);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  font-size: 16px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+a {
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>🙏 Welcome Back to GABE</h2>
+        <form method="POST">
+            <div>
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            <div>
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+        <div class="text-center mt-3">
+            <a href="/register">New here? Create an account</a>
+        </div>
+        <div class="text-center mt-2">
+            <a href="/">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
+    """
+
+@app.route('/api/chat', methods=['POST'])
+@login_required
+def api_chat():
+    """API endpoint for chat messages"""
+    try:
+        data = request.get_json()
+        message = data.get('message', '').strip()
+        
+        if not message:
+            return jsonify({'error': 'No message provided'}), 400
+        
+        # Check for crisis situation
+        crisis_response = crisis_detector.check_message(message)
+        if crisis_response:
+            return jsonify({'response': crisis_response})
+        
+        # Get GABE's response
+        response = gabe_ai.get_response(message, current_user.name)
+        
+        # Save conversation to database
+        conversation = Conversation(
+            user_id=current_user.id,
+            user_message=message,
+            gabe_response=response
+        )
+        db.session.add(conversation)
+        db.session.commit()
+        
+        return jsonify({'response': response})
+        
+    except Exception as e:
+        logging.error(f"Chat API error: {e}")
+        return jsonify({'error': 'An error occurred. Please try again.'}), 500
+
+@app.route('/api/prayer', methods=['POST'])
+@login_required
+def api_prayer():
+    """API endpoint for prayer requests"""
+    try:
+        data = request.get_json()
+        prayer_type = data.get('type', 'general')
+        context = data.get('context', '')
+        
+        prayer = spiritual_features.get_prayer(prayer_type, context)
+        return jsonify({'prayer': prayer})
+        
+    except Exception as e:
+        logging.error(f"Prayer API error: {e}")
+        return jsonify({'error': 'Could not generate prayer'}), 500
+
+@app.route('/api/drop-of-hope', methods=['GET'])
+@login_required
+def api_drop_of_hope():
+    """API endpoint for daily drop of hope"""
+    try:
+        drop = drop_of_hope.get_daily_drop()
+        return jsonify(drop)
+    except Exception as e:
+        logging.error(f"Drop of Hope API error: {e}")
+        return jsonify({'error': 'Could not retrieve drop of hope'}), 500
+
+@app.route('/api/spiritual-practice', methods=['POST'])
+@login_required
+def api_spiritual_practice():
+    """API endpoint for spiritual practices"""
+    try:
+        data = request.get_json()
+        practice_type = data.get('type', 'meditation')
+        duration = data.get('duration', 5)
+        
+        practice = spiritual_features.get_practice(practice_type, duration)
+        return jsonify({'practice': practice})
+        
+    except Exception as e:
+        logging.error(f"Spiritual Practice API error: {e}")
+        return jsonify({'error': 'Could not retrieve spiritual practice'}), 500
+
+@app.route('/api/gamified/journey', methods=['GET'])
+@login_required  
+def api_gamified_journey():
+    """API endpoint for gamified spiritual journey"""
+    try:
+        journey_data = gamified_features.get_user_journey(current_user.id)
+        return jsonify(journey_data)
+    except Exception as e:
+        logging.error(f"Gamified Journey API error: {e}")
+        return jsonify({'error': 'Could not retrieve journey data'}), 500
+
+@app.route('/api/gamified/achievement', methods=['POST'])
+@login_required
+def api_gamified_achievement():
+    """API endpoint for unlocking achievements"""
+    try:
+        data = request.get_json()
+        achievement_id = data.get('achievement_id')
+        
+        result = gamified_features.unlock_achievement(current_user.id, achievement_id)
+        return jsonify(result)
+        
+    except Exception as e:
+        logging.error(f"Achievement API error: {e}")
+        return jsonify({'error': 'Could not process achievement'}), 500
+
+@app.route('/api/conversation-history', methods=['GET'])
+@login_required
+def api_conversation_history():
+    """API endpoint to retrieve conversation history"""
+    try:
+        conversations = Conversation.query.filter_by(user_id=current_user.id).order_by(Conversation.timestamp.desc()).limit(50).all()
+        
+        history = []
+        for conv in conversations:
+            history.append({
+                'timestamp': conv.timestamp.isoformat(),
+                'user_message': conv.user_message,
+                'gabe_response': conv.gabe_response
+            })
+        
+        return jsonify({'history': history})
+        
+    except Exception as e:
+        logging.error(f"Conversation History API error: {e}")
+        return jsonify({'error': 'Could not retrieve conversation history'}), 500
+
+# Error handlers
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({'error': 'Not found'}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return jsonify({'error': 'Internal server error'}), 500
+
+# Run the app
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host='0.0.0.0', port=port, debug=False)
