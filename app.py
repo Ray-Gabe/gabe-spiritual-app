@@ -454,7 +454,7 @@ def index():
 </body>
 </html>
         """
-    """
+    
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
